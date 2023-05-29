@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "Frends.GoogleCloudStorage.CreateBucket/0.0.1": {
+      "Frends.GoogleCloudStorage.CreateBucket/1.0.0": {
         "dependencies": {
           "Google.Apis.Storage.v1": "1.60.0.2981",
           "Google.Cloud.Storage.V1": "4.5.0",
@@ -145,7 +145,7 @@
     }
   },
   "libraries": {
-    "Frends.GoogleCloudStorage.CreateBucket/0.0.1": {
+    "Frends.GoogleCloudStorage.CreateBucket/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

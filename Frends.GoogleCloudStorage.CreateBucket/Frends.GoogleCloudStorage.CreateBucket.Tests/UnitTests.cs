@@ -39,7 +39,7 @@ class UnitTests
     [TearDown]
     public async Task Teardown()
     {
-        File.Delete(_path);
+        //File.Delete(_path);
 
         using var client = await StorageClient.CreateAsync(GoogleCredential.FromJson(_credentialsJson));
         var buckets = client.ListBuckets(_projectId);

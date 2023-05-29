@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "Frends.GoogleCloudStorage.CreateBucket.Tests/1.0.0": {
         "dependencies": {
-          "Frends.GoogleCloudStorage.CreateBucket": "0.0.1",
+          "Frends.GoogleCloudStorage.CreateBucket": "1.0.0",
           "MSTest.TestFramework": "2.2.8",
           "Microsoft.NET.Test.Sdk": "16.6.1",
           "NUnit3TestAdapter": "3.17.0",
@@ -878,7 +878,7 @@
           }
         }
       },
-      "Frends.GoogleCloudStorage.CreateBucket/0.0.1": {
+      "Frends.GoogleCloudStorage.CreateBucket/1.0.0": {
         "dependencies": {
           "Google.Apis.Storage.v1": "1.60.0.2981",
           "Google.Cloud.Storage.V1": "4.5.0",
@@ -1381,7 +1381,7 @@
       "path": "system.xml.xpath.xmldocument/4.3.0",
       "hashPath": "system.xml.xpath.xmldocument.4.3.0.nupkg.sha512"
     },
-    "Frends.GoogleCloudStorage.CreateBucket/0.0.1": {
+    "Frends.GoogleCloudStorage.CreateBucket/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
