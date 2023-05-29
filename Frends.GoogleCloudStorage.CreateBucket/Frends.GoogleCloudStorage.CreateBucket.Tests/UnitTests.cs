@@ -12,7 +12,7 @@ namespace Frends.GoogleCloudStorage.CreateBucket.Tests;
 [TestFixture]
 class UnitTests
 {
-    private readonly string _credentialsJson = Environment.GetEnvironmentVariable("Frends_GoogleCloudStorage_CredJson");
+    //private readonly string _credentialsJson = Environment.GetEnvironmentVariable("Frends_GoogleCloudStorage_CredJson");
     private readonly string _projectId = "instant-stone-387712";
     private readonly string _bucketName = "test-bucket";
     private readonly string _location = "US-CENTRAL1";
@@ -23,7 +23,7 @@ class UnitTests
     [SetUp]
     public void Setup()
     {
-        File.WriteAllText(_path, _credentialsJson);
+        //File.WriteAllText(_path, _credentialsJson);
         _input = new Input()
         {
             BucketName = _bucketName,
@@ -41,7 +41,7 @@ class UnitTests
     {
         //File.Delete(_path);
 
-        using var client = await StorageClient.CreateAsync(GoogleCredential.FromJson(_credentialsJson));
+        using var client = await StorageClient.CreateAsync(GoogleCredential.FromFile(_path));
         var buckets = client.ListBuckets(_projectId);
         foreach (var bucket in buckets)
             client.DeleteBucket(bucket.Name);
@@ -50,13 +50,9 @@ class UnitTests
     [Test]
     public async Task CreateBucket()
     {
-        var test = _credentialsJson;
         var result = await GoogleCloudStorage.CreateBucket(_input, default);
         Assert.IsNotNull(result);
         var name = result.BucketName;
-        var location = result.Location;
-        var storageClass = result.StorageClass;
-        var time = result.TimeCreated;
         Assert.AreEqual(name, name);
     } 
 }
