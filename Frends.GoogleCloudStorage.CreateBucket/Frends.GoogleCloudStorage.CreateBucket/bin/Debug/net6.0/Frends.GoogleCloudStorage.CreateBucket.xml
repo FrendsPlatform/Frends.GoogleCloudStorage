@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Frends.GoogleCloudStorage.CreateBucket</name>
+    </assembly>
+    <members>
+        <member name="T:Frends.GoogleCloudStorage.CreateBucket.Definitions.CredentialType">
+            <summary>
+            Supported credential types for URL signing
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Definitions.CredentialType.None">
+            <summary>
+            Agent's personal credentials are used. 
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Definitions.CredentialType.ServiceAccountCredentials">
+            <summary>
+            Google OAuth 2.0 credential for accessing protected resources using an access token.
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Definitions.CredentialType.ImpersonatedCredentials">
+            <summary>
+            Allows a service account or user credential to impersonate a service account.
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Definitions.CredentialType.ComputeCredentials">
+            <summary>
+            Google OAuth 2.0 credential for accessing protected resources using an access token.
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Definitions.CredentialType.GoogleCredentials">
+            <summary>
+            Credential for authorizing calls using OAuth 2.0. It is a convenience wrapper
+            that allows handling of different types of credentials (like Google.Apis.Auth.OAuth2.ServiceAccountCredential,
+            Google.Apis.Auth.OAuth2.ComputeCredential or Google.Apis.Auth.OAuth2.UserCredential)
+            in a unified way.
+            </summary>
+        </member>
+        <member name="T:Frends.GoogleCloudStorage.CreateBucket.Definitions.Input">
+            <summary>
+            Input parameters.
+            </summary>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Input.ProjectId">
+            <summary>
+            Id of the project.
+            </summary>
+            <example>your - project - id</example>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Input.BucketName">
+            <summary>
+            Name for the bucket. If left empty NewGuid() method is used to create the bucket name.
+            </summary>
+            <example>your-unique-bucket-name</example>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Input.AddGuidToBucketName">
+            <summary>
+            When enabled the Task will add guid to the end of the bucket name with NewGuid() method. This will make sure that the bucket name is unique.
+            </summary>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Input.Location">
+            <summary>
+            Location
+            </summary>
+            <example>us-west1</example>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Input.StorageClass">
+            <summary>
+            Storage class for the bucket.
+            </summary>
+            <example>StorageClassType.STANDARD</example>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Input.CredentialJson">
+            <summary>
+            Google Credentials in JSON format.
+            </summary>
+            <example>
+            <code>
+            {
+                "type": "service_account",
+                "project_id": "instant-test-stone-387712",
+                "private_key_id": "17d0g1b5a6e255c0ed67ef7213j8466c336edc55",
+                "private_key": "-----BEGIN PRIVATE KEY-----\jnejbUHBVudhcebuheuwhv....\n-----END PRIVATE KEY-----\n",
+                "client_email": "cloudstorage-testuser@instant-stone-387712.iam.gserviceaccount.com",
+                "client_id": "vjkornijvnerijvneri",
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloudstorage-testuser%40instant-stone-387712.iam.gserviceaccount.com",
+                "universe_domain": "googleapis.com"
+            }
+            </code>
+            </example>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Input.CredentialFilePath">
+            <summary>
+            Full path to the json file which has credentials for Google.
+            </summary>
+            <example>C:\folder\google_credentials.json</example>
+        </member>
+        <member name="T:Frends.GoogleCloudStorage.CreateBucket.Definitions.Result">
+            <summary>
+            Result class.
+            </summary>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Result.BucketName">
+            <summary>
+            Bucket name of the newly created bucket.
+            </summary>
+            <exmaple>test-bucket123456789</exmaple>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Result.Location">
+            <summary>
+            Location of the bucket.
+            </summary>
+            <example>US-CENTRAL1</example>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Result.StorageClass">
+            <summary>
+            Storage class of the bucket.
+            </summary>
+            <example>STARNDARD</example>
+        </member>
+        <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Result.TimeCreated">
+            <summary>
+            DateTime of the created bucket.
+            </summary>
+            <example>26/05/2023 15.47.51</example>
+        </member>
+        <member name="T:Frends.GoogleCloudStorage.CreateBucket.Enums.StorageClassType">
+            <summary>
+            Types of storage class used in Google Cloud Storage.
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Enums.StorageClassType.STANDARD">
+            <summary>
+            Standard storage is best for data that is frequently accessed ("hot" data) and/or stored for only brief periods of time.
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Enums.StorageClassType.NEARLINE">
+            <summary>
+            Nearline storage is a low-cost, highly durable storage service for storing infrequently accessed data.
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Enums.StorageClassType.COLDLINE">
+            <summary>
+            Coldline storage is a very-low-cost, highly durable storage service for storing infrequently accessed data.
+            </summary>
+        </member>
+        <member name="F:Frends.GoogleCloudStorage.CreateBucket.Enums.StorageClassType.ARCHIVE">
+            <summary>
+            Archive storage is the lowest-cost, highly durable storage service for data archiving, online backup, and disaster recovery.
+            </summary>
+        </member>
+        <member name="T:Frends.GoogleCloudStorage.CreateBucket.GoogleCloudStorage">
+            <summary>
+            Main class for the Task.
+            </summary>
+        </member>
+        <member name="M:Frends.GoogleCloudStorage.CreateBucket.GoogleCloudStorage.CreateBucket(Frends.GoogleCloudStorage.CreateBucket.Definitions.Input,System.Threading.CancellationToken)">
+            <summary>
+            Creates a bucket to Google Cloud Storage.
+            [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.GoogleCloudStorage.CreateBucket)
+            </summary>
+            <param name="input">Bucket input parameters</param>
+            <param name="cancellationToken">CancellationToken is given by Frends</param>
+            <returns>Result object { string BucketName } </returns>
+        </member>
+    </members>
+</doc>

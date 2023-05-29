@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = Frends.GoogleCloudStorage.CreateBucket.Tests
+build_property.ProjectDir = C:\Users\virtari\repos\Frends.GoogleCloudStorage\Frends.GoogleCloudStorage.CreateBucket\Frends.GoogleCloudStorage.CreateBucket.Tests\
