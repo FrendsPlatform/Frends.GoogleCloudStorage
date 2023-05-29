@@ -2,7 +2,7 @@
 namespace Frends.GoogleCloudStorage.CreateBucket.Definitions;
 
 /// <summary>
-/// Result class.
+/// Result class
 /// </summary>
 public class Result
 {
