@@ -23,7 +23,7 @@ public class GoogleCloudStorage
     public static async Task<Result> CreateBucket([PropertyTab] Input input, CancellationToken cancellationToken)
     {
         GoogleCredential googleCredential = null;
-        
+
         if (!string.IsNullOrEmpty(input.CredentialJson))
             googleCredential = GoogleCredential.FromJson(input.CredentialJson);
         else if (!string.IsNullOrEmpty(input.CredentialFilePath))
