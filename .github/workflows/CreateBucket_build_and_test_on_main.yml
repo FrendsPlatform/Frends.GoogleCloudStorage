@@ -16,4 +16,4 @@ jobs:
       env_var_name_1: Frends_GoogleCloudStorage_CredJson
     secrets:
       badge_service_api_key: ${{ secrets.BADGE_SERVICE_API_KEY }}
-      env_var_value_1: ${{ secrets.FRENDS_GOOGLECLOUDSTORAGE_CREDJSON }} | base64 -d
+      env_var_value_1: ${{ secrets.FRENDS_GOOGLECLOUDSTORAGE_CREDJSON }}

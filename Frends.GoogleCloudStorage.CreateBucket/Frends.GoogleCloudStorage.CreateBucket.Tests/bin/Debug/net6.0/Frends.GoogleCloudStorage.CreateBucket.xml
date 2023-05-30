@@ -101,7 +101,7 @@
         </member>
         <member name="T:Frends.GoogleCloudStorage.CreateBucket.Definitions.Result">
             <summary>
-            Result class
+            Result class.
             </summary>
         </member>
         <member name="P:Frends.GoogleCloudStorage.CreateBucket.Definitions.Result.BucketName">
