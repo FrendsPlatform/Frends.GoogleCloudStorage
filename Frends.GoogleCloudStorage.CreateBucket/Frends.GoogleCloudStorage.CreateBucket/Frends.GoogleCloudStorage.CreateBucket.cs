@@ -20,10 +20,9 @@ public class GoogleCloudStorage
     /// <param name="input">Bucket input parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
     /// <returns>Result object { string BucketName, string Location, string StorageClass, DateTime TimeCreated } </returns>
-    public static async Task<Result> CreateBucket([PropertyTab] Input input, 
-        CancellationToken cancellationToken)
+    public static async Task<Result> CreateBucket([PropertyTab] Input input, CancellationToken cancellationToken)
     {
-        GoogleCredential googleCredential = null; 
+        GoogleCredential googleCredential = null;
         
         if (!string.IsNullOrEmpty(input.CredentialJson))
             googleCredential = GoogleCredential.FromJson(input.CredentialJson);
