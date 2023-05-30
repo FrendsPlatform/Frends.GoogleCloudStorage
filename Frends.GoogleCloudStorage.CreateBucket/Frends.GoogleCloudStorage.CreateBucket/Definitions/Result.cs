@@ -7,6 +7,11 @@ namespace Frends.GoogleCloudStorage.CreateBucket.Definitions;
 public class Result
 {
     /// <summary>
+    /// Result of the operation.
+    /// </summary>
+    /// <example>true</example>
+    public bool Success { get; private set; }
+    /// <summary>
     /// Bucket name of the newly created bucket.
     /// </summary>
     /// <exmaple>test-bucket123456789</exmaple>
@@ -32,6 +37,7 @@ public class Result
 
     internal Result(Bucket bucket)
     {
+        Success = true;
         BucketName = bucket.Name;
         Location = bucket.Location;
         StorageClass = bucket.StorageClass;

@@ -19,7 +19,7 @@ public class GoogleCloudStorage
     /// </summary>
     /// <param name="input">Bucket input parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
-    /// <returns>Result object { string BucketName } </returns>
+    /// <returns>Result object { string BucketName, string Location, string StorageClass, DateTime TimeCreated } </returns>
     public static async Task<Result> CreateBucket([PropertyTab] Input input, 
         CancellationToken cancellationToken)
     {
@@ -35,11 +35,13 @@ public class GoogleCloudStorage
         var bucketName = input.BucketName;
         if (string.IsNullOrEmpty(bucketName))
             bucketName = Guid.NewGuid().ToString();
+        else if (input.AddGuidToBucketName)
+            bucketName = $"{bucketName}-{Guid.NewGuid()}";
 
         var bucket = new Bucket
         {
             Location = input.Location,
-            Name = input.AddGuidToBucketName ? bucketName + Guid.NewGuid().ToString() : bucketName,
+            Name = bucketName,
             StorageClass = input.StorageClass.ToString()
         };
 
