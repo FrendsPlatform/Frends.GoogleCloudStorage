@@ -1,7 +1,7 @@
 ﻿namespace Frends.GoogleCloudStorage.DeleteBucket.Definitions;
 
 /// <summary>
-/// Supported credential types for URL signing
+/// Supported credential types for URL signing.
 /// </summary>
 public enum CredentialType
 {
