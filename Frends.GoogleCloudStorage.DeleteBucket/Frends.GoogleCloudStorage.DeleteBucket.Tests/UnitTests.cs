@@ -108,7 +108,7 @@ class UnitTests
                 StorageClass = details.StorageClass,
             };
             _ = await storage.CreateBucketAsync(details.ProjectId, newBucket, null, new CancellationToken());
-        }            
+        }
     }
 }
 
