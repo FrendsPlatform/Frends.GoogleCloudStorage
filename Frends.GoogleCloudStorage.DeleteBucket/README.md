@@ -1,10 +1,10 @@
-# Frends.GoogleCloudStorage.CreateBucket
+# Frends.GoogleCloudStorage.DeleteBucket
 
-[![Frends.GoogleCloudStorage.CreateBucket Main](https://github.com/FrendsPlatform/Frends.GoogleCloudStorage/actions/workflows/CreateBucket_build_and_test_on_main.yml/badge.svg)](https://github.com/FrendsPlatform/Frends.GoogleCloudStorage/actions/workflows/CreateBucket_build_and_test_on_main.yml)
+[![Frends.GoogleCloudStorage.DeleteBucket Main](https://github.com/FrendsPlatform/Frends.GoogleCloudStorage/actions/workflows/DeleteBucket_build_and_test_on_main.yml/badge.svg)](https://github.com/FrendsPlatform/Frends.GoogleCloudStorage/actions/workflows/DeleteBucket_build_and_test_on_main.yml)
 ![GitHub](https://img.shields.io/github/license/FrendsPlatform/Frends.GoogleCloudStorage?label=License)
-![Coverage](https://app-github-custom-badges.azurewebsites.net/Badge?key=FrendsPlatform/Frends.GoogleCloudStorage/Frends.GoogleCloudStorage.CreateBucket|main)
+![Coverage](https://app-github-custom-badges.azurewebsites.net/Badge?key=FrendsPlatform/Frends.GoogleCloudStorage/Frends.GoogleCloudStorage.DeleteBucket|main)
 
-Creates a bucket to Google Cloud Storage.
+Deletes a bucket from Google Cloud Storage.
 
 ## Installing
 
@@ -22,7 +22,7 @@ You can install the task via FRENDS UI Task View.
 
 ### Run tests
 
-cd Frends.GoogleCloudStorage.CreateBucket.Tests
+cd Frends.GoogleCloudStorage.DeleteBucket.Tests
 
 `dotnet test`
 

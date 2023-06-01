@@ -18,7 +18,7 @@ public class GoogleCloudStorage
     /// </summary>
     /// <param name="input">Bucket input parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
-    /// <returns>Result object { string BucketName, string Location, string StorageClass, DateTime TimeCreated } </returns>
+    /// <returns>Result object { bool Success } </returns>
     public static async Task<Result> DeleteBucket([PropertyTab] Input input, CancellationToken cancellationToken)
     {
         GoogleCredential googleCredential = null;
