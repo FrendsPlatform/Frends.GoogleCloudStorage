@@ -28,6 +28,7 @@ public class Input
     /// <summary>
     /// When enabled the Task will add guid to the end of the bucket name with NewGuid() method. This will make sure that the bucket name is unique.
     /// </summary>
+    /// <example>true</example>
     [DefaultValue(false)]
     public bool AddGuidToBucketName { get; set; }
 
