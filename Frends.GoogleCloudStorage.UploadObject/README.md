@@ -1,10 +1,10 @@
-# Frends.GoogleCloudStorage.DeleteBucket
+# Frends.GoogleCloudStorage.UploadObject
 
-[![Frends.GoogleCloudStorage.DeleteBucket Main](https://github.com/FrendsPlatform/Frends.GoogleCloudStorage/actions/workflows/DeleteBucket_build_and_test_on_main.yml/badge.svg)](https://github.com/FrendsPlatform/Frends.GoogleCloudStorage/actions/workflows/DeleteBucket_build_and_test_on_main.yml)
+[![Frends.GoogleCloudStorage.UploadObject Main](https://github.com/FrendsPlatform/Frends.GoogleCloudStorage/actions/workflows/UploadObject_build_and_test_on_main.yml/badge.svg)](https://github.com/FrendsPlatform/Frends.GoogleCloudStorage/actions/workflows/UploadObject_build_and_test_on_main.yml)
 ![GitHub](https://img.shields.io/github/license/FrendsPlatform/Frends.GoogleCloudStorage?label=License)
-![Coverage](https://app-github-custom-badges.azurewebsites.net/Badge?key=FrendsPlatform/Frends.GoogleCloudStorage/Frends.GoogleCloudStorage.DeleteBucket|main)
+![Coverage](https://app-github-custom-badges.azurewebsites.net/Badge?key=FrendsPlatform/Frends.GoogleCloudStorage/Frends.GoogleCloudStorage.UploadObject|main)
 
-Deletes a bucket from Google Cloud Storage.
+Uploads files to Google Cloud Storage.
 
 ## Installing
 
@@ -22,7 +22,7 @@ You can install the task via FRENDS UI Task View.
 
 ### Run tests
 
-cd Frends.GoogleCloudStorage.DeleteBucket.Tests
+cd Frends.GoogleCloudStorage.UploadObject.Tests
 
 `dotnet test`
 
