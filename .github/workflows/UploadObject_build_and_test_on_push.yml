@@ -19,6 +19,7 @@ jobs:
       test_feed_api_key: ${{ secrets.TASKS_TEST_FEED_API_KEY }}
       env_var_value_1: ${{ secrets.FRENDS_GOOGLECLOUDSTORAGE_CREDJSON }}
   linux-build:
+    needs: windows-build
     uses: FrendsPlatform/FrendsTasks/.github/workflows/linux_build_test.yml@main
     with:
       workdir: Frends.GoogleCloudStorage.UploadObject

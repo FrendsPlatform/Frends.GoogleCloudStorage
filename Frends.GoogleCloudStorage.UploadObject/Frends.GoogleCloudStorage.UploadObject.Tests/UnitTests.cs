@@ -15,6 +15,9 @@ namespace Frends.GoogleCloudStorage.UploadObject.Tests;
 [TestFixture]
 class UnitTests
 {
+    /// <summary>
+    /// Needs credentials set in environment variables.
+    /// </summary>
     private readonly string _credentialsBase64 = Environment.GetEnvironmentVariable("Frends_GoogleCloudStorage_CredJson");
     private readonly dynamic _details = new
     {
