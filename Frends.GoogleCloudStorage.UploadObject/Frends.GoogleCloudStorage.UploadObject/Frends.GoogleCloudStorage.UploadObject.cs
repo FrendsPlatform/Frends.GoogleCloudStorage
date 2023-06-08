@@ -85,7 +85,7 @@ public class GoogleCloudStorage
 
     private static PatternMatchingResult FindMatchingFiles(string directoryPath, string pattern)
     {
-        // Check the user can access the folder
+        // Check the user can access the folder.
         // This will return false if the path does not exist or you do not have read permissions.
         if (!Directory.Exists(directoryPath))
         {
