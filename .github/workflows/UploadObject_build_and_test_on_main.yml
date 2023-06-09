@@ -1,0 +1,28 @@
+name: UploadObject Main
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Frends.GoogleCloudStorage.UploadObject/**'
+  workflow_dispatch:
+
+jobs:
+  windows-build:
+    uses: FrendsPlatform/FrendsTasks/.github/workflows/build_main.yml@main
+    with:
+      workdir: Frends.GoogleCloudStorage.UploadObject
+      env_var_name_1: Frends_GoogleCloudStorage_CredJson
+    secrets:
+      badge_service_api_key: ${{ secrets.BADGE_SERVICE_API_KEY }}
+      env_var_value_1: ${{ secrets.FRENDS_GOOGLECLOUDSTORAGE_CREDJSON }}
+  linux-build:
+    needs: windows-build
+    uses: FrendsPlatform/FrendsTasks/.github/workflows/linux_build_main.yml@main
+    with:
+      workdir: Frends.GoogleCloudStorage.UploadObject
+      env_var_name_1: Frends_GoogleCloudStorage_CredJson
+    secrets:
+      badge_service_api_key: ${{ secrets.BADGE_SERVICE_API_KEY }}
+      env_var_value_1: ${{ secrets.FRENDS_GOOGLECLOUDSTORAGE_CREDJSON }}
