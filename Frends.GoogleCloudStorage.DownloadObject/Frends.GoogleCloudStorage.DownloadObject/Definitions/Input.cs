@@ -25,7 +25,7 @@ public class Input
     public string BucketName { get; set; }
 
     /// <summary>
-    /// Directory of the source files.
+    /// Destination directory for the downloaded files.
     /// </summary>
     /// <example>c:\folder\</example>
     public string Directory { get; set; }

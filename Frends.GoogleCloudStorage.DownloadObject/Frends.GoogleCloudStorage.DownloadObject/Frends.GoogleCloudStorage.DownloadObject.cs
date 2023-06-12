@@ -19,7 +19,7 @@ public class GoogleCloudStorage
     /// </summary>
     /// <param name="input">Input parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
-    /// <returns>Result object { bool Success, List DownloadedObjects [ object { string BucketName, string StorageClass, DateTime TimeCreated, string Bucket, ulong Size } ] } </returns>
+    /// <returns>List [ Result object { string BucketName, string StorageClass, DateTime TimeCreated, string Bucket, ulong Size } ]</returns>
     public static async Task<List<Result>> DownloadObject([PropertyTab] Input input, CancellationToken cancellationToken)
     {
         GoogleCredential googleCredential = null;
