@@ -65,9 +65,8 @@ class UnitTests
             "test1234.txt",
             "test6789.txt"
         };
-
-        await UploadTestFilesAsync(_credentialsJson, _details, files);
         Directory.CreateDirectory(_directory);
+        await UploadTestFilesAsync(_credentialsJson, _details, files, _directory);
     }
 
     [TearDown]
@@ -122,7 +121,7 @@ class UnitTests
         Assert.AreEqual(5, result.Count);
     }
 
-    private static async Task UploadTestFilesAsync(string credentialsJson, dynamic details, string[] files)
+    private static async Task UploadTestFilesAsync(string credentialsJson, dynamic details, string[] files, string path)
     {
         using var storage = await StorageClient.CreateAsync(GoogleCredential.FromJson(credentialsJson));
         var bucket = storage.ListBuckets((string)details.ProjectId, null).FirstOrDefault(n => n.Name.Equals(details.BucketName));
@@ -139,7 +138,7 @@ class UnitTests
 
         foreach (var file in files)
         {
-            var fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file);
+            var fullPath = Path.Combine(path, file);
             File.WriteAllText(fullPath, "This is a test file");
             await storage.UploadObjectAsync(details.BucketName, file, "text/plain", new MemoryStream(File.ReadAllBytes(fullPath)));
         }
