@@ -62,7 +62,7 @@ class UnitTests
             "test.xml",
             "test.txt",
             "test.foo",
-            "test1234.txt", 
+            "test1234.txt",
             "test6789.txt"
         };
 
@@ -73,7 +73,7 @@ class UnitTests
     [TearDown]
     public async Task Teardown()
     {
-       using var client = await StorageClient.CreateAsync(GoogleCredential.FromFile(_path));
+        using var client = await StorageClient.CreateAsync(GoogleCredential.FromFile(_path));
         foreach (var file in client.ListObjects(_details.BucketName))
             client.DeleteObject(file);
         client.DeleteBucket(_details.BucketName, null);
