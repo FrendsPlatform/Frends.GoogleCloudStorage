@@ -34,12 +34,8 @@ class UnitTests
     private static string _contentType = "text/plain";
 
     [SetUp]
-    public async Task Setup()
+    public void Setup()
     {
-        var base64EncodedBytes = Convert.FromBase64String(_credentialsBase64);
-        _credentialsJson = Encoding.ASCII.GetString(base64EncodedBytes);
-        File.WriteAllText(_path, _credentialsJson);
-
         _input = new Input
         {
             BucketName = _details.BucketName,
@@ -50,6 +46,14 @@ class UnitTests
             CredentialFilePath = _path,
             CredentialJson = ""
         };
+    }
+
+    [OneTimeSetUp]
+    public async Task OneTimeSetup()
+    {
+        var base64EncodedBytes = Convert.FromBase64String(_credentialsBase64);
+        _credentialsJson = Encoding.ASCII.GetString(base64EncodedBytes);
+        File.WriteAllText(_path, _credentialsJson);
 
         var files = new string[]
         {
@@ -69,7 +73,7 @@ class UnitTests
         await UploadTestFilesAsync(_credentialsJson, _details, files, _directory);
     }
 
-    [TearDown]
+    [OneTimeTearDown]
     public async Task Teardown()
     {
         using var client = await StorageClient.CreateAsync(GoogleCredential.FromFile(_path));
