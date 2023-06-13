@@ -11,15 +11,13 @@ namespace Frends.GoogleCloudStorage.DownloadObject;
 /// </summary>
 public class GoogleCloudStorage
 {
-
-
     /// <summary>
     /// Downloads files from Google Cloud Storage.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.GoogleCloudStorage.DownloadObject)
     /// </summary>
     /// <param name="input">Input parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
-    /// <returns>List [ Result object { string BucketName, string StorageClass, DateTime TimeCreated, string Bucket, ulong Size } ]</returns>
+    /// <returns>List [ Result object { string Name, string StorageClass, DateTime TimeCreated, string Bucket, ulong Size } ]</returns>
     public static async Task<List<Result>> DownloadObject([PropertyTab] Input input, CancellationToken cancellationToken)
     {
         GoogleCredential googleCredential = null;

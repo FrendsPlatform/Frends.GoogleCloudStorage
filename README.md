@@ -7,6 +7,7 @@ Frends Tasks for Google Cloud Storage operations.
 - [Frends.GoogleCloudStorage.CreateBucket](Frends.GoogleCloudStorage.CreateBucket/README.md)
 - [Frends.GoogleCloudStorage.DeleteBucket](Frends.GoogleCloudStorage.DeleteBucket/README.md)
 - [Frends.GoogleCloudStorage.UploadObject](Frends.GoogleCloudStorage.UploadObject/README.md)
+- [Frends.GoogleCloudStorage.DownloadObject](Frends.GoogleCloudStorage.DownloadObject/README.md)
 
 # Contributing
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
