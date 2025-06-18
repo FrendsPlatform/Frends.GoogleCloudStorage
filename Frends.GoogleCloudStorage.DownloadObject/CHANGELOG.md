@@ -1,8 +1,11 @@
 # Changelog
 
 ## [1.1.0] - 2025-06-18
+### Removed
+- Eliminated the `ListBuckets` call used only for error handling. The bucket name is now passed directly to `FindMatchingFiles`.
+
 ### Fixed
-- Fixed issue with ListBucket access policy by removing the ListBucket method and giving the bucket name directly to the FindMatchingFiles method.
+- Access-policy failure when the `storage.buckets.list` permission is missing.
 
 ## [1.0.0] - 2023-06-12
 ### Added
