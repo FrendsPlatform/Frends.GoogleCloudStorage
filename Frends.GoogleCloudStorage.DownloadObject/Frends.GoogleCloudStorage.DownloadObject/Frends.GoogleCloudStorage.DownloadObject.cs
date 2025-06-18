@@ -33,14 +33,10 @@ public class GoogleCloudStorage
 
         using var storage = await StorageClient.CreateAsync(googleCredential);
 
-        var bucket = storage.ListBuckets(input.ProjectId, null).FirstOrDefault(n => n.Name.Equals(input.BucketName)).Name;
-        if (string.IsNullOrEmpty(bucket))
-            throw new ArgumentException($"Bucket {input.BucketName} not found.");
-
-        var files = await FindMatchingFiles(storage, bucket, input.Pattern, cancellationToken);
+        var files = await FindMatchingFiles(storage, input.BucketName, input.Pattern, cancellationToken);
         var results = new List<Result>();
         foreach (var file in files)
-            results.Add(await ExecuteDownloadSingleObjectAsync(storage, file, bucket, input, cancellationToken));
+            results.Add(await ExecuteDownloadSingleObjectAsync(storage, file, input.BucketName, input, cancellationToken));
 
         return results;
     }
