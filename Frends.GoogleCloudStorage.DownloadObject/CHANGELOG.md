@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0]
+## [1.1.0] - 2025-06-18
 ### Fixed
 - Fixed issue with ListBucket access policy by removing the ListBucket method and giving the bucket name directly to the FindMatchingFiles method.
 
