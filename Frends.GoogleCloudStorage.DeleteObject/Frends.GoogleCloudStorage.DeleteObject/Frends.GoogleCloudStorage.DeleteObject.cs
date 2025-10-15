@@ -45,7 +45,7 @@ public class GoogleCloudStorage
                 throw new ArgumentException($"Bucket {input.BucketName} not found.");
             throw new Exception("Undefined error when accessing bucket.");
         }
-        
+
         var files = await FindMatchingFiles(storage, foundBucketName, input.Pattern, cancellationToken);
         var results = new List<Result>();
         foreach (var file in files)
