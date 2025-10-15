@@ -33,14 +33,23 @@ public class GoogleCloudStorage
 
         using var storage = await StorageClient.CreateAsync(googleCredential);
 
-        var bucket = storage.ListBuckets(input.ProjectId, null).FirstOrDefault(n => n.Name.Equals(input.BucketName)).Name;
-        if (string.IsNullOrEmpty(bucket))
-            throw new ArgumentException($"Bucket {input.BucketName} not found.");
-
-        var files = await FindMatchingFiles(storage, bucket, input.Pattern, cancellationToken);
+        var foundBucketName = string.Empty;
+        try
+        {
+            var bucket = await storage.GetBucketAsync(input.BucketName, null, cancellationToken);
+            foundBucketName = bucket.Name;
+        }
+        catch (Exception)
+        {
+            if (string.IsNullOrEmpty(foundBucketName))
+                throw new ArgumentException($"Bucket {input.BucketName} not found.");
+            throw new Exception("Undefined error when accessing bucket.");
+        }
+        
+        var files = await FindMatchingFiles(storage, foundBucketName, input.Pattern, cancellationToken);
         var results = new List<Result>();
         foreach (var file in files)
-            results.Add(await ExecuteDeleteSingleObjectAsync(storage, file, bucket, cancellationToken));
+            results.Add(await ExecuteDeleteSingleObjectAsync(storage, file, foundBucketName, cancellationToken));
 
         return results;
     }
