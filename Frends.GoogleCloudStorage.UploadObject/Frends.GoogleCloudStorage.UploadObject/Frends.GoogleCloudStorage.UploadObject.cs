@@ -63,15 +63,22 @@ public class GoogleCloudStorage
 
         using var storage = await StorageClient.CreateAsync(googleCredential);
 
-        var bucket = storage.ListBuckets(input.ProjectId, null).FirstOrDefault(n => n.Name.Equals(input.BucketName)).Name;
-        if (string.IsNullOrEmpty(bucket))
+        var foundBucketName = string.Empty;
+        try
+        {
+            var bucket = await storage.GetBucketAsync(input.BucketName, null, cancellationToken);
+            foundBucketName = bucket.Name;
+        }
+        catch (Exception)
+        {
             throw new ArgumentException($"Bucket {input.BucketName} not found.");
+        }
 
         var matchResults = FindMatchingFiles(input.Directory, input.Pattern);
         var files = matchResults.Files.Select(match => Path.Combine(input.Directory, match.Path)).ToArray();
         var results = new List<Result>();
         foreach (var file in files)
-            results.Add(await ExecuteUploadSingleObjectAsync(storage, file, bucket, input, cancellationToken));
+            results.Add(await ExecuteUploadSingleObjectAsync(storage, file, foundBucketName, input, cancellationToken));
 
         return results;
     }
