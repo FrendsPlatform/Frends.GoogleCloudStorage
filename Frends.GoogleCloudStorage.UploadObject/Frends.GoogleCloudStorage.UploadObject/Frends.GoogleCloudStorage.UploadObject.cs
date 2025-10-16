@@ -71,9 +71,7 @@ public class GoogleCloudStorage
         }
         catch (Exception)
         {
-            if (string.IsNullOrEmpty(foundBucketName))
-                throw new ArgumentException($"Bucket {input.BucketName} not found.");
-            throw new Exception("Undefined error when accessing bucket.");
+            throw new ArgumentException($"Bucket {input.BucketName} not found.");
         }
 
         var matchResults = FindMatchingFiles(input.Directory, input.Pattern);
