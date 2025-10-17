@@ -111,7 +111,7 @@ class UnitTests
     }
 
     [Test]
-    public async Task UploadObject_ShouldFailWhenBuckerDoesNotExist()
+    public async Task UploadObject_ShouldFailWhenBucketDoesNotExist()
     {
         var input = new Input
         {
@@ -124,9 +124,9 @@ class UnitTests
             CredentialJson = ""
         };
         await File.WriteAllTextAsync(Path.Combine(_directory, "test.txt"), "This is a test file.");
-        var ex = Assert.ThrowsAsync<Google.GoogleApiException>(async () =>
+        var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
             await GoogleCloudStorage.UploadObject(input, CancellationToken.None));
-        Assert.That(ex.Message.Contains("The bucket does not exist"), $"Actual message: {ex.Message}");
+        Assert.That(ex.Message.Contains("Invalid bucket name"), $"Actual message: {ex.Message}");
     }
 
     private static async Task CreateBucket(string credentialsJson, dynamic details)
