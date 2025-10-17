@@ -117,7 +117,7 @@ class UnitTests
     }
 
     [Test]
-    public async Task UploadObject_ShouldFailWhenBucketDoesNotExist()
+    public void DeleteObject_ShouldFailWhenBucketDoesNotExist()
     {
         var input = new Input
         {
@@ -128,7 +128,6 @@ class UnitTests
             CredentialFilePath = _path,
             CredentialJson = ""
         };
-        await File.WriteAllTextAsync(Path.Combine(_directory, "test.txt"), "This is a test file.");
         var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
             await GoogleCloudStorage.DeleteObject(input, CancellationToken.None));
         Assert.That(ex.Message.Contains("Invalid bucket name"), $"Actual message: {ex.Message}");

@@ -2,7 +2,7 @@
 
 ## [1.2.0] - 2025-10-17
 ### Fixed
-- Fix thrown exception when uploading an object to a non-existing bucket
+- Fix thrown exception when deleting an object from a non-existing bucket
 
 ## [1.1.0] - 2025-10-15
 ### Changed
