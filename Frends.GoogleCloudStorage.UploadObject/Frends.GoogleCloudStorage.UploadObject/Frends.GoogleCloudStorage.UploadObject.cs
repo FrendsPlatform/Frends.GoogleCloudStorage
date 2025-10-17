@@ -12,8 +12,6 @@ namespace Frends.GoogleCloudStorage.UploadObject;
 /// </summary>
 public class GoogleCloudStorage
 {
-
-
     /// <summary>
     /// Uploads files to Google Cloud Storage.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.GoogleCloudStorage.UploadObject)
@@ -63,30 +61,22 @@ public class GoogleCloudStorage
 
         using var storage = await StorageClient.CreateAsync(googleCredential);
 
-        var foundBucketName = string.Empty;
-        try
-        {
-            var bucket = await storage.GetBucketAsync(input.BucketName, null, cancellationToken);
-            foundBucketName = bucket.Name;
-        }
-        catch (Exception)
-        {
-            throw new ArgumentException($"Bucket {input.BucketName} not found.");
-        }
-
         var matchResults = FindMatchingFiles(input.Directory, input.Pattern);
         var files = matchResults.Files.Select(match => Path.Combine(input.Directory, match.Path)).ToArray();
         var results = new List<Result>();
         foreach (var file in files)
-            results.Add(await ExecuteUploadSingleObjectAsync(storage, file, foundBucketName, input, cancellationToken));
+            results.Add(
+                await ExecuteUploadSingleObjectAsync(storage, file, input.BucketName, input, cancellationToken));
 
         return results;
     }
 
-    private static async Task<Result> ExecuteUploadSingleObjectAsync(StorageClient storage, string file, string bucket, Input input, CancellationToken cancellationToken)
+    private static async Task<Result> ExecuteUploadSingleObjectAsync(StorageClient storage, string file, string bucket,
+        Input input, CancellationToken cancellationToken)
     {
         var objectName = Path.GetFileName(file);
-        var result = await storage.UploadObjectAsync(bucket, objectName, input.ContentType, new MemoryStream(File.ReadAllBytes(file)), null, cancellationToken);
+        var result = await storage.UploadObjectAsync(bucket, objectName, input.ContentType,
+            new MemoryStream(File.ReadAllBytes(file)), null, cancellationToken);
         return new Result(result);
     }
 
@@ -96,7 +86,8 @@ public class GoogleCloudStorage
         // This will return false if the path does not exist or you do not have read permissions.
         if (!Directory.Exists(directoryPath))
         {
-            throw new Exception($"Directory does not exist or you do not have read access. Tried to access directory '{directoryPath}'");
+            throw new Exception(
+                $"Directory does not exist or you do not have read access. Tried to access directory '{directoryPath}'");
         }
 
         var matcher = new Matcher();
@@ -105,4 +96,3 @@ public class GoogleCloudStorage
         return results;
     }
 }
-

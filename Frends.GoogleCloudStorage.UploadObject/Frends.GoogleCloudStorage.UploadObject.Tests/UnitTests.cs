@@ -18,7 +18,9 @@ class UnitTests
     /// <summary>
     /// Needs credentials set in environment variables.
     /// </summary>
-    private readonly string _credentialsBase64 = Environment.GetEnvironmentVariable("Frends_GoogleCloudStorage_CredJson");
+    private readonly string _credentialsBase64 =
+        Environment.GetEnvironmentVariable("Frends_GoogleCloudStorage_CredJson");
+
     private readonly dynamic _details = new
     {
         ProjectId = "instant-stone-387712",
@@ -26,6 +28,7 @@ class UnitTests
         Location = "US-CENTRAL1",
         StorageClass = "STANDARD"
     };
+
     private readonly string _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../credentials.json");
     private static Input _input;
     private static string _credentialsJson = "";
@@ -101,15 +104,36 @@ class UnitTests
         {
             File.WriteAllText(Path.Combine(_directory, file), "This is a test file.");
         }
+
         _input.Pattern = "*.txt";
         var result = await GoogleCloudStorage.UploadObject(_input, default);
         Assert.AreEqual(6, result.Count);
     }
 
+    [Test]
+    public async Task UploadObject_ShouldFailWhenBuckerDoesNotExist()
+    {
+        var input = new Input
+        {
+            BucketName = $"InvalidBucket_{Guid.NewGuid()}",
+            ProjectId = _details.ProjectId,
+            Directory = _directory,
+            Pattern = _pattern,
+            ContentType = _contentType,
+            CredentialFilePath = _path,
+            CredentialJson = ""
+        };
+        await File.WriteAllTextAsync(Path.Combine(_directory, "test.txt"), "This is a test file.");
+        var ex = Assert.ThrowsAsync<Google.GoogleApiException>(async () =>
+            await GoogleCloudStorage.UploadObject(input, CancellationToken.None));
+        Assert.That(ex.Message.Contains("The bucket does not exist"), $"Actual message: {ex.Message}");
+    }
+
     private static async Task CreateBucket(string credentialsJson, dynamic details)
     {
         using var storage = await StorageClient.CreateAsync(GoogleCredential.FromJson(credentialsJson));
-        var bucket = storage.ListBuckets((string)details.ProjectId, null).FirstOrDefault(n => n.Name.Equals(details.BucketName));
+        var bucket = storage.ListBuckets((string)details.ProjectId, null)
+            .FirstOrDefault(n => n.Name.Equals(details.BucketName));
         if (bucket == null)
         {
             var newBucket = new Bucket
@@ -122,6 +146,3 @@ class UnitTests
         }
     }
 }
-
-
-
