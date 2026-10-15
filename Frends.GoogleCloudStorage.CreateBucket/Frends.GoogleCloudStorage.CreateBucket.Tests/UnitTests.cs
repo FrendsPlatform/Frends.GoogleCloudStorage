@@ -20,6 +20,7 @@ class UnitTests
     private readonly StorageClassType _storageClass = StorageClassType.STANDARD;
     private readonly string _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../credentials.json");
     private static Input _input;
+    private static Options _options;
     private static string _credentialsJson = "";
 
     [SetUp]
@@ -28,6 +29,7 @@ class UnitTests
         var base64EncodedBytes = Convert.FromBase64String(_credentialsBase64);
         _credentialsJson = Encoding.ASCII.GetString(base64EncodedBytes);
         File.WriteAllText(_path, _credentialsJson);
+        _options = new Options();
         _input = new Input()
         {
             BucketName = _bucketName,
@@ -53,7 +55,7 @@ class UnitTests
     [Test]
     public async Task CreateBucket()
     {
-        var result = await GoogleCloudStorage.CreateBucket(_input, default);
+        var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
         Assert.IsNotNull(result);
         Assert.AreEqual(_bucketName, result.BucketName);
     }
@@ -63,7 +65,7 @@ class UnitTests
     {
         _input.CredentialFilePath = string.Empty;
         _input.CredentialJson = _credentialsJson;
-        var result = await GoogleCloudStorage.CreateBucket(_input, default);
+        var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
         Assert.AreEqual(_bucketName, result.BucketName);
     }
 
@@ -71,7 +73,7 @@ class UnitTests
     public async Task CreateBucket_EmptyBucketName()
     {
         _input.BucketName = string.Empty;
-        var result = await GoogleCloudStorage.CreateBucket(_input, default);
+        var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
         Assert.IsTrue(result.Success);
     }
 
@@ -80,7 +82,7 @@ class UnitTests
     {
         _input.BucketName = "test-bucket";
         _input.AddGuidToBucketName = true;
-        var result = await GoogleCloudStorage.CreateBucket(_input, default);
+        var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
         Assert.IsTrue(result.Success);
     }
 }
