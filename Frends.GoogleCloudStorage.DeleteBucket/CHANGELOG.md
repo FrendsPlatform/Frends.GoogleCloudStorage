@@ -6,6 +6,7 @@
 
 - Added error handling with cancellation support.
 - Added `Options` parameter to allow for more flexible configuration.
+- Added parameter to define credential source.
 
 ### Changed
 
