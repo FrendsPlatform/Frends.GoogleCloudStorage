@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
@@ -16,7 +17,8 @@ class UnitTests
 {
     private readonly string _credentialsBase64 = Environment.GetEnvironmentVariable("Frends_GoogleCloudStorage_CredJson");
     private readonly string _projectId = "instant-stone-387712";
-    private readonly string _bucketName = "test-bucket-9bc24fe0-77a0-4fb2-9b15-5e6f66972c6e";
+    private string _bucketName;
+    private readonly List<string> _createdBuckets = new();
     private readonly string _location = "US-CENTRAL1";
     private readonly StorageClassType _storageClass = StorageClassType.STANDARD;
     private readonly string _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../credentials.json");
@@ -27,6 +29,8 @@ class UnitTests
     [SetUp]
     public void Setup()
     {
+        _bucketName = $"test-bucket-{Guid.NewGuid()}";
+        _createdBuckets.Clear();
         var base64EncodedBytes = Convert.FromBase64String(_credentialsBase64);
         _credentialsJson = Encoding.ASCII.GetString(base64EncodedBytes);
         File.WriteAllText(_path, _credentialsJson);
@@ -48,9 +52,16 @@ class UnitTests
     public async Task Teardown()
     {
         using var client = await StorageClient.CreateAsync(GoogleCredential.FromFile(_path));
-        var buckets = client.ListBuckets(_projectId);
-        foreach (var bucket in buckets)
-            client.DeleteBucket(bucket.Name);
+        foreach (var bucket in _createdBuckets)
+        {
+            try
+            {
+                client.DeleteBucket(bucket, new DeleteBucketOptions { DeleteObjects = true });
+            }
+            catch (Google.GoogleApiException ex) when (ex.HttpStatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+            }
+        }
         File.Delete(_path);
     }
 
@@ -58,6 +69,7 @@ class UnitTests
     public async Task CreateBucket()
     {
         var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
+        _createdBuckets.Add(result.BucketName);
         Assert.IsNotNull(result);
         Assert.AreEqual(_bucketName, result.BucketName);
     }
@@ -69,6 +81,7 @@ class UnitTests
         _input.CredentialsType = CredentialType.Json;
         _input.CredentialJson = _credentialsJson;
         var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
+        _createdBuckets.Add(result.BucketName);
         Assert.AreEqual(_bucketName, result.BucketName);
     }
 
@@ -77,6 +90,7 @@ class UnitTests
     {
         _input.BucketName = string.Empty;
         var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
+        _createdBuckets.Add(result.BucketName);
         Assert.IsTrue(result.Success);
     }
 
@@ -86,6 +100,7 @@ class UnitTests
         _input.BucketName = "test-bucket";
         _input.AddGuidToBucketName = true;
         var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
+        _createdBuckets.Add(result.BucketName);
         Assert.IsTrue(result.Success);
     }
 
