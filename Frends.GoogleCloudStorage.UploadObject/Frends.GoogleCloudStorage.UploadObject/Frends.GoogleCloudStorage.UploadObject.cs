@@ -4,13 +4,14 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
 using System.ComponentModel;
 using Frends.GoogleCloudStorage.UploadObject.Definitions;
+using Frends.GoogleCloudStorage.UploadObject.Helpers;
 
 namespace Frends.GoogleCloudStorage.UploadObject;
 
 /// <summary>
 /// Main class for the Task.
 /// </summary>
-public class GoogleCloudStorage
+public static class GoogleCloudStorage
 {
     /// <summary>
     /// Uploads files to Google Cloud Storage.
@@ -44,40 +45,51 @@ public class GoogleCloudStorage
     ///    subfolder\foo\bar\is\here\temp\test.xml
     /// </frendsdocs>
     /// <param name="input">Input parameters</param>
+    /// <param name="options">Additional parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
-    /// <returns>List [ Result object { string Name, string StorageClass, DateTime TimeCreated, string Bucket, ulong Size } ] </returns>
-    public static async Task<List<Result>> UploadObject([PropertyTab] Input input, CancellationToken cancellationToken)
+    /// <returns>Result containing metadata for uploaded objects.</returns>
+    public static async Task<Result> UploadObject([PropertyTab] Input input, [PropertyTab] Options options, CancellationToken cancellationToken)
     {
-        GoogleCredential googleCredential = null;
+        options ??= new Options();
 
-        if (!string.IsNullOrEmpty(input.CredentialJson))
-            googleCredential = GoogleCredential.FromJson(input.CredentialJson);
-        else if (!string.IsNullOrEmpty(input.CredentialFilePath))
-            googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
-        else throw new ArgumentException("Credentials are missing.");
+        try
+        {
+            ValidationHandler.Run(input, options);
+            GoogleCredential googleCredential = null;
 
-        if (string.IsNullOrEmpty(input.BucketName))
-            throw new ArgumentException("Bucket name is missing.");
+            if (!string.IsNullOrEmpty(input.CredentialJson))
+                googleCredential = GoogleCredential.FromJson(input.CredentialJson);
+            else if (!string.IsNullOrEmpty(input.CredentialFilePath))
+                googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
+            else throw new ArgumentException("Credentials are missing.");
 
-        using var storage = await StorageClient.CreateAsync(googleCredential);
+            if (string.IsNullOrEmpty(input.BucketName))
+                throw new ArgumentException("Bucket name is missing.");
 
-        var matchResults = FindMatchingFiles(input.Directory, input.Pattern);
-        var files = matchResults.Files.Select(match => Path.Combine(input.Directory, match.Path)).ToArray();
-        var results = new List<Result>();
-        foreach (var file in files)
-            results.Add(
-                await ExecuteUploadSingleObjectAsync(storage, file, input.BucketName, input, cancellationToken));
+            using var storage = await StorageClient.CreateAsync(googleCredential);
 
-        return results;
+            var matchResults = FindMatchingFiles(input.Directory, input.Pattern);
+            var files = matchResults.Files.Select(match => Path.Combine(input.Directory, match.Path)).ToArray();
+            var uploadedObjects = new List<UploadedObject>();
+            foreach (var file in files)
+                uploadedObjects.Add(
+                    await ExecuteUploadSingleObjectAsync(storage, file, input.BucketName, input, cancellationToken));
+
+            return new Result(true) { UploadedObjects = uploadedObjects };
+        }
+        catch (Exception ex)
+        {
+            return ex.Handle(options);
+        }
     }
 
-    private static async Task<Result> ExecuteUploadSingleObjectAsync(StorageClient storage, string file, string bucket,
+    private static async Task<UploadedObject> ExecuteUploadSingleObjectAsync(StorageClient storage, string file, string bucket,
         Input input, CancellationToken cancellationToken)
     {
         var objectName = Path.GetFileName(file);
         var result = await storage.UploadObjectAsync(bucket, objectName, input.ContentType,
             new MemoryStream(File.ReadAllBytes(file)), null, cancellationToken);
-        return new Result(result);
+        return new UploadedObject(result);
     }
 
     private static PatternMatchingResult FindMatchingFiles(string directoryPath, string pattern)

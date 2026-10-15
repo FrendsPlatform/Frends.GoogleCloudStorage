@@ -74,8 +74,8 @@ class UnitTests
     public async Task UploadObject()
     {
         File.WriteAllText(Path.Combine(_directory, "test.txt"), "This is a test file.");
-        var result = await GoogleCloudStorage.UploadObject(_input, default);
-        Assert.AreEqual(1, result.Count);
+        var result = await GoogleCloudStorage.UploadObject(_input, new Options(), default);
+        Assert.AreEqual(1, result.UploadedObjects.Count);
     }
 
     [Test]
@@ -84,8 +84,8 @@ class UnitTests
         File.WriteAllText(Path.Combine(_directory, "test.txt"), "This is a test file.");
         _input.CredentialFilePath = string.Empty;
         _input.CredentialJson = _credentialsJson;
-        var result = await GoogleCloudStorage.UploadObject(_input, default);
-        Assert.AreEqual(1, result.Count);
+        var result = await GoogleCloudStorage.UploadObject(_input, new Options(), default);
+        Assert.AreEqual(1, result.UploadedObjects.Count);
     }
 
     [Test]
@@ -106,8 +106,8 @@ class UnitTests
         }
 
         _input.Pattern = "*.txt";
-        var result = await GoogleCloudStorage.UploadObject(_input, default);
-        Assert.AreEqual(6, result.Count);
+        var result = await GoogleCloudStorage.UploadObject(_input, new Options(), default);
+        Assert.AreEqual(6, result.UploadedObjects.Count);
     }
 
     [Test]
@@ -125,7 +125,7 @@ class UnitTests
         };
         await File.WriteAllTextAsync(Path.Combine(_directory, "test.txt"), "This is a test file.");
         var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
-            await GoogleCloudStorage.UploadObject(input, CancellationToken.None));
+            await GoogleCloudStorage.UploadObject(input, new Options(), CancellationToken.None));
         Assert.That(ex.Message.Contains("Invalid bucket name"), $"Actual message: {ex.Message}");
     }
 
