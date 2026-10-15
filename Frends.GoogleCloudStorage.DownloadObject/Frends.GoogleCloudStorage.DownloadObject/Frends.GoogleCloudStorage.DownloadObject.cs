@@ -3,49 +3,57 @@ using Google.Cloud.Storage.V1;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Frends.GoogleCloudStorage.DownloadObject.Definitions;
+using Frends.GoogleCloudStorage.DownloadObject.Enums;
+using Frends.GoogleCloudStorage.DownloadObject.Helpers;
 
 namespace Frends.GoogleCloudStorage.DownloadObject;
 
 /// <summary>
 /// Main class for the Task.
 /// </summary>
-public class GoogleCloudStorage
+public static class GoogleCloudStorage
 {
     /// <summary>
     /// Downloads files from Google Cloud Storage.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.GoogleCloudStorage.DownloadObject)
     /// </summary>
     /// <param name="input">Input parameters</param>
+    /// <param name="options">Additional parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
-    /// <returns>List [ Result object { string Name, string StorageClass, DateTime TimeCreated, string Bucket, ulong Size } ]</returns>
-    public static async Task<List<Result>> DownloadObject([PropertyTab] Input input, CancellationToken cancellationToken)
+    /// <returns>Object { bool Success, List&lt;DownloadedObject&gt; Objects, Object Error { string Message, Exception AdditionalInfo } }</returns>
+    public static async Task<Result> DownloadObject([PropertyTab] Input input, [PropertyTab] Options options, CancellationToken cancellationToken)
     {
-        GoogleCredential googleCredential = null;
+        try
+        {
+            ValidationHandler.Run(input, options);
 
-        if (!string.IsNullOrEmpty(input.CredentialJson))
-            googleCredential = GoogleCredential.FromJson(input.CredentialJson);
-        else if (!string.IsNullOrEmpty(input.CredentialFilePath))
-            googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
-        else throw new ArgumentException("Credentials are missing.");
+            var googleCredential = input.CredentialsType switch
+            {
+                CredentialType.Json => GoogleCredential.FromJson(input.CredentialJson),
+                CredentialType.FilePath => GoogleCredential.FromFile(input.CredentialFilePath),
+                _ => throw new ArgumentOutOfRangeException(nameof(input.CredentialsType), input.CredentialsType, "Unsupported credentials type.")
+            };
 
-        if (string.IsNullOrEmpty(input.BucketName))
-            throw new ArgumentException("Bucket name is missing.");
+            using var storage = await StorageClient.CreateAsync(googleCredential);
 
-        using var storage = await StorageClient.CreateAsync(googleCredential);
+            var files = await FindMatchingFiles(storage, input.BucketName, input.Pattern, cancellationToken);
+            var results = new List<DownloadedObject>();
+            foreach (var file in files)
+                results.Add(await ExecuteDownloadSingleObjectAsync(storage, file, input.BucketName, input, cancellationToken));
 
-        var files = await FindMatchingFiles(storage, input.BucketName, input.Pattern, cancellationToken);
-        var results = new List<Result>();
-        foreach (var file in files)
-            results.Add(await ExecuteDownloadSingleObjectAsync(storage, file, input.BucketName, input, cancellationToken));
-
-        return results;
+            return new Result(true, results);
+        }
+        catch (Exception ex)
+        {
+            return ex.Handle(options);
+        }
     }
 
-    private static async Task<Result> ExecuteDownloadSingleObjectAsync(StorageClient storage, string file, string bucket, Input input, CancellationToken cancellationToken)
+    private static async Task<DownloadedObject> ExecuteDownloadSingleObjectAsync(StorageClient storage, string file, string bucket, Input input, CancellationToken cancellationToken)
     {
         using var fs = File.Open(Path.Combine(input.Directory, Path.GetFileName(file)), FileMode.OpenOrCreate);
         var result = await storage.DownloadObjectAsync(bucket, file, fs, null, cancellationToken);
-        return new Result(result);
+        return new DownloadedObject(result);
     }
 
     private static async Task<List<string>> FindMatchingFiles(StorageClient client, string bucket, string pattern, CancellationToken cancellationToken)
@@ -80,4 +88,3 @@ public class GoogleCloudStorage
         return Regex.IsMatch(filename, pattern, RegexOptions.IgnoreCase);
     }
 }
-
