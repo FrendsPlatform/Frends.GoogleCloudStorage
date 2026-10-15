@@ -3,6 +3,7 @@ using Google.Cloud.Storage.V1;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Frends.GoogleCloudStorage.DeleteObject.Definitions;
+using Frends.GoogleCloudStorage.DeleteObject.Enums;
 using Frends.GoogleCloudStorage.DeleteObject.Helpers;
 
 namespace Frends.GoogleCloudStorage.DeleteObject;
@@ -27,16 +28,14 @@ public static class GoogleCloudStorage
     {
         try
         {
-            GoogleCredential googleCredential = null;
+            ValidationHandler.Run(input, options);
 
-            if (!string.IsNullOrEmpty(input.CredentialJson))
-                googleCredential = GoogleCredential.FromJson(input.CredentialJson);
-            else if (!string.IsNullOrEmpty(input.CredentialFilePath))
-                googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
-            else throw new ArgumentException("Credentials are missing.");
-
-            if (string.IsNullOrEmpty(input.BucketName))
-                throw new ArgumentException("Bucket name is missing.");
+            var googleCredential = input.CredentialsType switch
+            {
+                CredentialsType.Json => GoogleCredential.FromJson(input.CredentialJson),
+                CredentialsType.FilePath => GoogleCredential.FromFile(input.CredentialFilePath),
+                _ => throw new ArgumentOutOfRangeException(nameof(input.CredentialsType), input.CredentialsType, "Unsupported credentials type."),
+            };
 
             using var storage = await StorageClient.CreateAsync(googleCredential);
 

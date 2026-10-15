@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Frends.GoogleCloudStorage.DeleteObject.Definitions;
+using Frends.GoogleCloudStorage.DeleteObject.Enums;
 using NUnit.Framework;
 
 namespace Frends.GoogleCloudStorage.DeleteObject.Tests;
@@ -17,14 +18,15 @@ internal class ErrorHandlerTest
         Pattern = "*.txt",
         CredentialJson = string.Empty,
         CredentialFilePath = string.Empty,
+        CredentialsType = CredentialsType.Json,
     };
 
     [Test]
     public void Should_Throw_Error_When_ThrowErrorOnFailure_Is_True()
     {
-        var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
+        var ex = Assert.ThrowsAsync<System.ComponentModel.DataAnnotations.ValidationException>(async () =>
             await GoogleCloudStorage.DeleteObject(InvalidInput(), new Options(), CancellationToken.None));
-        Assert.That(ex.Message, Is.EqualTo("Credentials are missing."));
+        Assert.That(ex.Message, Does.Contain("CredentialJson is required."));
     }
 
     [Test]
@@ -33,7 +35,20 @@ internal class ErrorHandlerTest
         var options = new Options { ThrowErrorOnFailure = false };
         var result = await GoogleCloudStorage.DeleteObject(InvalidInput(), options, CancellationToken.None);
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Error.Message, Is.EqualTo("Credentials are missing."));
+        Assert.That(result.Error.Message, Does.Contain("CredentialJson is required."));
+    }
+
+    [Test]
+    public async Task Should_Require_CredentialFilePath_When_FilePath_Is_Selected()
+    {
+        var input = InvalidInput();
+        input.CredentialsType = CredentialsType.FilePath;
+        input.CredentialJson = "unused";
+
+        var result = await GoogleCloudStorage.DeleteObject(input, new Options { ThrowErrorOnFailure = false }, CancellationToken.None);
+
+        Assert.That(result.Success, Is.False);
+        Assert.That(result.Error.Message, Does.Contain("CredentialFilePath is required."));
     }
 
     [Test]

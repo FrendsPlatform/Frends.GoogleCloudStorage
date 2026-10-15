@@ -9,6 +9,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Google.Apis.Storage.v1.Data;
 using Frends.GoogleCloudStorage.DeleteObject.Definitions;
+using Frends.GoogleCloudStorage.DeleteObject.Enums;
 
 namespace Frends.GoogleCloudStorage.DeleteObject.Tests;
 
@@ -46,7 +47,8 @@ class UnitTests
             Pattern = _pattern,
             ContentType = _contentType,
             CredentialFilePath = _path,
-            CredentialJson = ""
+            CredentialJson = "",
+            CredentialsType = CredentialsType.FilePath,
         };
     }
 
@@ -82,7 +84,7 @@ class UnitTests
     public async Task DeleteObject_CredentialsFromJsonString()
     {
         _input.Pattern = "pro_tet.txt";
-        _input.CredentialFilePath = string.Empty;
+        _input.CredentialsType = CredentialsType.Json;
         _input.CredentialJson = _credentialsJson;
         var result = await GoogleCloudStorage.DeleteObject(_input, new Options(), default);
         Assert.AreEqual(1, result.Objects.Count);
@@ -126,7 +128,8 @@ class UnitTests
             Pattern = _pattern,
             ContentType = _contentType,
             CredentialFilePath = _path,
-            CredentialJson = ""
+            CredentialJson = "",
+            CredentialsType = CredentialsType.FilePath,
         };
         var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
             await GoogleCloudStorage.DeleteObject(input, new Options(), CancellationToken.None));

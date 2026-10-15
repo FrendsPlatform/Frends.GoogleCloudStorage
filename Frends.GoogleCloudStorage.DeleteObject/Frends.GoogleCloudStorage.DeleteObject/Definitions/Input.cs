@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Frends.GoogleCloudStorage.DeleteObject.Attributes;
+using Frends.GoogleCloudStorage.DeleteObject.Enums;
 
 namespace Frends.GoogleCloudStorage.DeleteObject.Definitions;
 
@@ -14,6 +16,7 @@ public class Input
     /// <example>your - project - id</example>
     [DefaultValue("your - project - id")]
     [DisplayFormat(DataFormatString = "Text")]
+    [Required]
     public string ProjectId { get; set; }
 
     /// <summary>
@@ -22,12 +25,14 @@ public class Input
     /// <example>your-unique-bucket-name</example>
     [DefaultValue("your-unique-bucket-name")]
     [DisplayFormat(DataFormatString = "Text")]
+    [Required]
     public string BucketName { get; set; }
 
     /// <summary>
     /// File mask for the source files.
     /// </summary>
     /// <example>*.txt</example>
+    [Required]
     public string Pattern { get; set; }
 
     /// <summary>
@@ -35,6 +40,14 @@ public class Input
     /// </summary>
     /// <example>text/plain</example>
     public string ContentType { get; set; }
+
+    /// <summary>
+    /// Type of credentials input.
+    /// </summary>
+    /// <example>Json</example>
+    [DefaultValue(CredentialsType.Json)]
+    [EnumDataType(typeof(CredentialsType))]
+    public CredentialsType CredentialsType { get; set; }
 
     /// <summary>
     /// Google Credentials in JSON format.
@@ -56,6 +69,8 @@ public class Input
     /// }
     /// </code>
     /// </example>
+    [UIHint(nameof(CredentialsType), "", CredentialsType.Json)]
+    [RequiredIf(nameof(CredentialsType), CredentialsType.Json)]
     [DisplayFormat(DataFormatString = "Json")]
     public string CredentialJson { get; set; }
 
@@ -63,7 +78,8 @@ public class Input
     /// Full path to the json file which has credentials for Google.
     /// </summary>
     /// <example>C:\folder\google_credentials.json</example>
+    [UIHint(nameof(CredentialsType), "", CredentialsType.FilePath)]
+    [RequiredIf(nameof(CredentialsType), CredentialsType.FilePath)]
     [DisplayFormat(DataFormatString = "Text")]
     public string CredentialFilePath { get; set; }
 }
-
