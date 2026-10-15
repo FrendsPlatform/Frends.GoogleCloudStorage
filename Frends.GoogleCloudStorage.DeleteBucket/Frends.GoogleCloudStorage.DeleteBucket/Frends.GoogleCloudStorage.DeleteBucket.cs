@@ -28,16 +28,10 @@ public static class GoogleCloudStorage
         try
         {
             ValidationHandler.Run(input, options);
-            GoogleCredential googleCredential = null;
 
-            if (!string.IsNullOrEmpty(input.CredentialJson))
-                googleCredential = GoogleCredential.FromJson(input.CredentialJson);
-            else if (!string.IsNullOrEmpty(input.CredentialFilePath))
-                googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
-            else throw new ArgumentException("Credentials are missing.");
-
-            if (string.IsNullOrEmpty(input.BucketName))
-                throw new ArgumentException("Bucket name is missing.");
+            var googleCredential = input.CredentialsType == CredentialsType.Json
+                ? GoogleCredential.FromJson(input.CredentialJson)
+                : GoogleCredential.FromFile(input.CredentialFilePath);
 
             using var storage = await StorageClient.CreateAsync(googleCredential);
 

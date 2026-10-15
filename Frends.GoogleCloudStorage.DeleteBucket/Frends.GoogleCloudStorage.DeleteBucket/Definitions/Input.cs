@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Frends.GoogleCloudStorage.DeleteBucket.Attributes;
 
 namespace Frends.GoogleCloudStorage.DeleteBucket.Definitions;
 
@@ -14,6 +15,7 @@ public class Input
     /// <example>your - project - id</example>
     [DefaultValue("your - project - id")]
     [DisplayFormat(DataFormatString = "Text")]
+    [Required(ErrorMessage = "Project id is missing.")]
     public string ProjectId { get; set; }
 
     /// <summary>
@@ -22,6 +24,7 @@ public class Input
     /// <example>your-unique-bucket-name</example>
     [DefaultValue("your-unique-bucket-name")]
     [DisplayFormat(DataFormatString = "Text")]
+    [Required(ErrorMessage = "Bucket name is missing.")]
     public string BucketName { get; set; }
 
     /// <summary>
@@ -37,6 +40,13 @@ public class Input
     /// <example>true</example>
     [DefaultValue(true)]
     public bool ThrowIfNoBucketFound { get; set; }
+
+    /// <summary>
+    /// How the Google credentials are provided.
+    /// </summary>
+    /// <example>Json</example>
+    [DefaultValue(CredentialsType.Json)]
+    public CredentialsType CredentialsType { get; set; } = CredentialsType.Json;
 
     /// <summary>
     /// Google Credentials in JSON format.
@@ -58,6 +68,8 @@ public class Input
     /// }
     /// </code>
     /// </example>
+    [UIHint(nameof(CredentialsType), "", CredentialsType.Json)]
+    [RequiredIf(nameof(CredentialsType), CredentialsType.Json, ErrorMessage = "Credentials are missing.")]
     [DisplayFormat(DataFormatString = "Json")]
     public string CredentialJson { get; set; }
 
@@ -65,6 +77,8 @@ public class Input
     /// Full path to the json file which has credentials for Google.
     /// </summary>
     /// <example>C:\folder\google_credentials.json</example>
+    [UIHint(nameof(CredentialsType), "", CredentialsType.FilePath)]
+    [RequiredIf(nameof(CredentialsType), CredentialsType.FilePath, ErrorMessage = "Credentials are missing.")]
     [DisplayFormat(DataFormatString = "Text")]
     public string CredentialFilePath { get; set; }
 }

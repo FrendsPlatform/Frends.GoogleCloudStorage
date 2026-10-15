@@ -21,5 +21,6 @@ public class Options
     /// <example>Bucket deletion failed: invalid credentials</example>
     [DisplayFormat(DataFormatString = "Text")]
     [DefaultValue("")]
+    [UIHint(nameof(ThrowErrorOnFailure), "", true)]
     public string ErrorMessageOnFailure { get; set; } = string.Empty;
 }
