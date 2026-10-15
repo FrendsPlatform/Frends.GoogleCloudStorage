@@ -8,7 +8,7 @@ namespace Frends.GoogleCloudStorage.DeleteBucket;
 /// <summary>
 /// Main class for the Task.
 /// </summary>
-public class GoogleCloudStorage
+public static class GoogleCloudStorage
 {
 
 
@@ -18,38 +18,48 @@ public class GoogleCloudStorage
     /// </summary>
     /// <param name="input">Bucket input parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
+    /// <param name="options">Additional parameters.</param>
     /// <returns>Result object { bool Success } </returns>
-    public static async Task<Result> DeleteBucket([PropertyTab] Input input, CancellationToken cancellationToken)
+    public static async Task<Result> DeleteBucket([PropertyTab] Input input, CancellationToken cancellationToken, [PropertyTab] Options options = null)
     {
-        GoogleCredential googleCredential = null;
+        options ??= new Options();
 
-        if (!string.IsNullOrEmpty(input.CredentialJson))
-            googleCredential = GoogleCredential.FromJson(input.CredentialJson);
-        else if (!string.IsNullOrEmpty(input.CredentialFilePath))
-            googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
-        else throw new ArgumentException("Credentials are missing.");
-
-        if (string.IsNullOrEmpty(input.BucketName))
-            throw new ArgumentException("Bucket name is missing.");
-
-        using var storage = await StorageClient.CreateAsync(googleCredential);
-
-        var bucket = storage.ListBuckets(input.ProjectId, null).FirstOrDefault(n => n.Name.Equals(input.BucketName));
-        if (bucket != null)
+        try
         {
-            var options = new DeleteBucketOptions
+            ValidationHandler.Run(input, options);
+            GoogleCredential googleCredential = null;
+
+            if (!string.IsNullOrEmpty(input.CredentialJson))
+                googleCredential = GoogleCredential.FromJson(input.CredentialJson);
+            else if (!string.IsNullOrEmpty(input.CredentialFilePath))
+                googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
+            else throw new ArgumentException("Credentials are missing.");
+
+            if (string.IsNullOrEmpty(input.BucketName))
+                throw new ArgumentException("Bucket name is missing.");
+
+            using var storage = await StorageClient.CreateAsync(googleCredential);
+
+            var bucket = storage.ListBuckets(input.ProjectId, null).FirstOrDefault(n => n.Name.Equals(input.BucketName));
+            if (bucket != null)
             {
-                DeleteObjects = input.DeleteObjects,
-                RetryOptions = RetryOptions.IdempotentRetryOptions
-            };
+                var deleteBucketOptions = new DeleteBucketOptions
+                {
+                    DeleteObjects = input.DeleteObjects,
+                    RetryOptions = RetryOptions.IdempotentRetryOptions
+                };
 
-            await storage.DeleteBucketAsync(bucket, options, cancellationToken);
-            return new Result(true);
+                await storage.DeleteBucketAsync(bucket, deleteBucketOptions, cancellationToken);
+                return new Result(true);
+            }
+
+            if (input.ThrowIfNoBucketFound)
+                throw new ArgumentException("No bucket found.");
+            return new Result(false);
         }
-
-        if (input.ThrowIfNoBucketFound)
-            throw new ArgumentException("No bucket found.");
-        return new Result(false);
+        catch (Exception ex)
+        {
+            return ex.Handle(options);
+        }
     }
 }
-

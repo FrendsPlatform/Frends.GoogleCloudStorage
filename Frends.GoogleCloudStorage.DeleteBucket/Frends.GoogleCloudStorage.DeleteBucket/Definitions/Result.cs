@@ -11,9 +11,15 @@ public class Result
     /// <example>true</example>
     public bool Success { get; private set; }
 
-    internal Result(bool success)
+    /// <summary>
+    /// Error details. Null when the operation succeeds.
+    /// </summary>
+    /// <example>Bucket name is missing.</example>
+    public Error Error { get; private set; }
+
+    public Result(bool success, Error error = null)
     {
         Success = success;
+        Error = error;
     }
 }
-
