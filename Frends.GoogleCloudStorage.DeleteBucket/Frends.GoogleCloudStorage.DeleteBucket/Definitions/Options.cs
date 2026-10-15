@@ -16,7 +16,7 @@ public class Options
     public bool ThrowErrorOnFailure { get; set; } = true;
 
     /// <summary>
-    /// Overrides the error message on failure. If <see cref="ThrowErrorOnFailure"/> is true, the original exception is wrapped in a new exception with this message.
+    /// Overrides the error message on failure. If ThrowErrorOnFailure is true, the original exception is wrapped in a new exception with this message.
     /// </summary>
     /// <example>Bucket deletion failed: invalid credentials</example>
     [DisplayFormat(DataFormatString = "Text")]

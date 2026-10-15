@@ -2,6 +2,7 @@
 using Google.Cloud.Storage.V1;
 using System.ComponentModel;
 using Frends.GoogleCloudStorage.DeleteBucket.Definitions;
+using Frends.GoogleCloudStorage.DeleteBucket.Helpers;
 
 namespace Frends.GoogleCloudStorage.DeleteBucket;
 
@@ -20,7 +21,7 @@ public static class GoogleCloudStorage
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
     /// <param name="options">Additional parameters.</param>
     /// <returns>Result object { bool Success } </returns>
-    public static async Task<Result> DeleteBucket([PropertyTab] Input input, CancellationToken cancellationToken, [PropertyTab] Options options = null)
+    public static async Task<Result> DeleteBucket([PropertyTab] Input input, [PropertyTab] Options options, CancellationToken cancellationToken)
     {
         options ??= new Options();
 

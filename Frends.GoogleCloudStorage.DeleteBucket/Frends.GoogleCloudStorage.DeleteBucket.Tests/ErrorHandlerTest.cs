@@ -14,7 +14,7 @@ internal class ErrorHandlerTest
     public void Should_Throw_Error_When_ThrowErrorOnFailure_Is_True()
     {
         var exception = Assert.ThrowsAsync<ArgumentException>(async () =>
-            await GoogleCloudStorage.DeleteBucket(new Input(), default, new Options()));
+            await GoogleCloudStorage.DeleteBucket(new Input(), new Options(), default));
         Assert.That(exception, Is.Not.Null);
     }
 
@@ -22,7 +22,7 @@ internal class ErrorHandlerTest
     public async Task Should_Return_Failed_Result_When_ThrowErrorOnFailure_Is_False()
     {
         var options = new Options { ThrowErrorOnFailure = false };
-        var result = await GoogleCloudStorage.DeleteBucket(new Input(), default, options);
+        var result = await GoogleCloudStorage.DeleteBucket(new Input(), options, default);
         Assert.That(result.Success, Is.False);
         Assert.That(result.Error.Message, Is.EqualTo("Credentials are missing."));
     }
@@ -32,7 +32,7 @@ internal class ErrorHandlerTest
     {
         var options = new Options { ErrorMessageOnFailure = CustomErrorMessage };
         var exception = Assert.ThrowsAsync<Exception>(async () =>
-            await GoogleCloudStorage.DeleteBucket(new Input(), default, options));
+            await GoogleCloudStorage.DeleteBucket(new Input(), options, default));
         Assert.That(exception.Message, Does.Contain(CustomErrorMessage));
         Assert.That(exception.InnerException, Is.TypeOf<ArgumentException>());
     }
