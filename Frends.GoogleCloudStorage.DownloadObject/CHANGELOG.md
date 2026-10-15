@@ -1,13 +1,19 @@
 # Changelog
 
 ## [2.0.0] - 2026-10-15
-### Changed
-- Breaking: the Task now requires an `Options` parameter and returns a single result object with `Success`, `Objects` (the list of downloaded objects) and `Error`, instead of a plain list.
-- Upgraded the Task to target .NET 8.
 
 ### Added
-- `ThrowErrorOnFailure` and `ErrorMessageOnFailure` options for controlling error handling.
-- Input parameters are validated before the download starts.
+
+- Added error handling with cancellation support.
+- Added `Options` parameter to allow for more flexible configuration.
+- [Breaking Change] Added Input parameter to define credentials source.
+
+### Changed
+
+- The Task now returns a single result object with `Success`, `Objects` (the list of downloaded objects) and `Error`, instead of a plain list.
+- Update target framework to .NET 8.
+- [Breaking Change] Exceptions raised regarding validation parameters are changed.
+- Added `ThrowErrorOnFailure` and `ErrorMessageOnFailure` options for controlling error handling.
 
 ## [1.1.0] - 2025-06-18
 ### Removed

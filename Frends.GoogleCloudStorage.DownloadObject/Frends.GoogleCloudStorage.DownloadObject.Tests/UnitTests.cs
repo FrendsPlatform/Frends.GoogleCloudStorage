@@ -9,6 +9,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Google.Apis.Storage.v1.Data;
 using Frends.GoogleCloudStorage.DownloadObject.Definitions;
+using Frends.GoogleCloudStorage.DownloadObject.Enums;
 
 namespace Frends.GoogleCloudStorage.DownloadObject.Tests;
 
@@ -43,6 +44,7 @@ class UnitTests
             Directory = _directory,
             Pattern = _pattern,
             ContentType = _contentType,
+            CredentialsType = CredentialType.FilePath,
             CredentialFilePath = _path,
             CredentialJson = ""
         };
@@ -97,6 +99,7 @@ class UnitTests
     {
         _input.CredentialFilePath = string.Empty;
         _input.CredentialJson = _credentialsJson;
+        _input.CredentialsType = CredentialType.Json;
         var result = await GoogleCloudStorage.DownloadObject(_input, new Options(), default);
         Assert.AreEqual(1, result.Objects.Count);
     }
@@ -150,6 +153,5 @@ class UnitTests
 
 
 }
-
 
 

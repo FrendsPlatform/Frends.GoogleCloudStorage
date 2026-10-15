@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Frends.GoogleCloudStorage.DownloadObject.Attributes;
+using Frends.GoogleCloudStorage.DownloadObject.Enums;
 
 namespace Frends.GoogleCloudStorage.DownloadObject.Definitions;
 
@@ -40,6 +42,14 @@ public class Input
     public string Pattern { get; set; }
 
     /// <summary>
+    /// Type of Google Cloud credentials to use.
+    /// </summary>
+    /// <example>CredentialType.Json</example>
+    [DefaultValue(CredentialType.Json)]
+    [EnumDataType(typeof(CredentialType), ErrorMessage = "CredentialType must be a valid credential type.")]
+    public CredentialType CredentialsType { get; set; } = CredentialType.Json;
+
+    /// <summary>
     /// Content to be uploaded to the Google Cloud Storage.
     /// </summary>
     /// <example>text/plain</example>
@@ -66,6 +76,8 @@ public class Input
     /// </code>
     /// </example>
     [DisplayFormat(DataFormatString = "Json")]
+    [UIHint(nameof(CredentialsType), "", CredentialType.Json)]
+    [RequiredIf(nameof(CredentialsType), CredentialType.Json, ErrorMessage = "CredentialJson is required when CredentialsType is Json.")]
     public string CredentialJson { get; set; }
 
     /// <summary>
@@ -73,6 +85,7 @@ public class Input
     /// </summary>
     /// <example>C:\folder\google_credentials.json</example>
     [DisplayFormat(DataFormatString = "Text")]
+    [UIHint(nameof(CredentialsType), "", CredentialType.FilePath)]
+    [RequiredIf(nameof(CredentialsType), CredentialType.FilePath, ErrorMessage = "CredentialFilePath is required when CredentialsType is FilePath.")]
     public string CredentialFilePath { get; set; }
 }
-

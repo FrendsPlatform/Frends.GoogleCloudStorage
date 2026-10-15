@@ -3,6 +3,7 @@ using Google.Cloud.Storage.V1;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Frends.GoogleCloudStorage.DownloadObject.Definitions;
+using Frends.GoogleCloudStorage.DownloadObject.Enums;
 using Frends.GoogleCloudStorage.DownloadObject.Helpers;
 
 namespace Frends.GoogleCloudStorage.DownloadObject;
@@ -24,15 +25,14 @@ public static class GoogleCloudStorage
     {
         try
         {
-            ValidationHandler.Run(input);
+            ValidationHandler.Run(input, options);
 
-            GoogleCredential googleCredential;
-
-            if (!string.IsNullOrEmpty(input.CredentialJson))
-                googleCredential = GoogleCredential.FromJson(input.CredentialJson);
-            else if (!string.IsNullOrEmpty(input.CredentialFilePath))
-                googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
-            else throw new ArgumentException("Credentials are missing.");
+            var googleCredential = input.CredentialsType switch
+            {
+                CredentialType.Json => GoogleCredential.FromJson(input.CredentialJson),
+                CredentialType.FilePath => GoogleCredential.FromFile(input.CredentialFilePath),
+                _ => throw new ArgumentOutOfRangeException(nameof(input.CredentialsType), input.CredentialsType, "Unsupported credentials type.")
+            };
 
             using var storage = await StorageClient.CreateAsync(googleCredential);
 
@@ -88,4 +88,3 @@ public static class GoogleCloudStorage
         return Regex.IsMatch(filename, pattern, RegexOptions.IgnoreCase);
     }
 }
-

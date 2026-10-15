@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Frends.GoogleCloudStorage.DownloadObject.Definitions;
+using Frends.GoogleCloudStorage.DownloadObject.Enums;
 using NUnit.Framework;
 
 namespace Frends.GoogleCloudStorage.DownloadObject.Tests;
@@ -16,6 +17,7 @@ class ErrorHandlerTest
         BucketName = string.Empty,
         Directory = "TestData",
         Pattern = "*.txt",
+        CredentialsType = CredentialType.Json,
         CredentialJson = "{}",
     };
 
@@ -43,5 +45,34 @@ class ErrorHandlerTest
         var ex = Assert.ThrowsAsync<Exception>(async () =>
             await GoogleCloudStorage.DownloadObject(InvalidInput(), options, CancellationToken.None));
         Assert.That(ex.Message, Contains.Substring(CustomErrorMessage));
+    }
+
+    [Test]
+    public void Should_Require_Selected_Credentials_Input()
+    {
+        var input = new Input
+        {
+            BucketName = "bucket",
+            Directory = "TestData",
+            Pattern = "*.txt",
+            CredentialsType = CredentialType.FilePath,
+        };
+
+        var ex = Assert.ThrowsAsync<System.ComponentModel.DataAnnotations.ValidationException>(async () =>
+            await GoogleCloudStorage.DownloadObject(input, new Options(), CancellationToken.None));
+        Assert.That(ex.Message, Contains.Substring("CredentialFilePath is required"));
+    }
+
+    [Test]
+    public async Task Should_Validate_Options()
+    {
+        var options = new Options
+        {
+            ErrorMessageOnFailure = new string('x', 1025),
+            ThrowErrorOnFailure = false,
+        };
+        var result = await GoogleCloudStorage.DownloadObject(InvalidInput(), options, CancellationToken.None);
+        Assert.That(result.Success, Is.False);
+        Assert.That(result.Error.Message, Contains.Substring("ErrorMessageOnFailure cannot exceed 1024 characters"));
     }
 }
