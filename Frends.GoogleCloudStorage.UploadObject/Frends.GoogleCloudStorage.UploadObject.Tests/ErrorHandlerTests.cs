@@ -41,4 +41,45 @@ internal class ErrorHandlerTests
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex.Message, Contains.Substring(CustomErrorMessage));
     }
+
+    [TestCase(CredentialSource.Json)]
+    [TestCase(CredentialSource.FilePath)]
+    public async Task Should_Require_The_Selected_Credential_Input(CredentialSource credentialSource)
+    {
+        var input = new Input
+        {
+            CredentialSource = credentialSource,
+            BucketName = "test-bucket",
+            Directory = "test-directory",
+            Pattern = "*.txt"
+        };
+
+        var result = await GoogleCloudStorage.UploadObject(
+            input,
+            new Options { ThrowErrorOnFailure = false },
+            default);
+
+        Assert.That(result.Success, Is.False);
+        Assert.That(result.Error.Message, Does.Contain("is required"));
+    }
+
+    [Test]
+    public async Task Should_Validate_Required_Bucket_Name()
+    {
+        var input = new Input
+        {
+            CredentialSource = CredentialSource.Json,
+            CredentialJson = "{}",
+            Directory = "test-directory",
+            Pattern = "*.txt"
+        };
+
+        var result = await GoogleCloudStorage.UploadObject(
+            input,
+            new Options { ThrowErrorOnFailure = false },
+            default);
+
+        Assert.That(result.Success, Is.False);
+        Assert.That(result.Error.Message, Does.Contain("BucketName"));
+    }
 }

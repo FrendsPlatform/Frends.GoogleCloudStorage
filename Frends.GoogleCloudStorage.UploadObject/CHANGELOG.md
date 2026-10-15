@@ -1,8 +1,16 @@
 # Changelog
 
 ## [2.0.0] - 2026-10-15
+
+### Added
+- Added error handling with cancellation support.
+- Added the `Options` parameter to allow for more flexible configuration.
+- [Breaking Change] Added an input parameter to define the credentials source.
+
 ### Changed
-- Upload Object now returns one task result containing metadata for every uploaded object, and can return or throw task failures according to its options.
+- Update target framework to .NET 8.
+- [Breaking Change] Exceptions raised regarding validation parameters are changed.
+- Upload Object now returns one task result containing metadata for every uploaded object.
 
 ## [1.2.0] - 2025-10-17
 ### Fixed

@@ -21,5 +21,6 @@ public class Options
     /// <example>Upload failed: invalid bucket name</example>
     [DisplayFormat(DataFormatString = "Text")]
     [DefaultValue("")]
+    [Required(AllowEmptyStrings = true)]
     public string ErrorMessageOnFailure { get; set; } = string.Empty;
 }

@@ -45,6 +45,7 @@ class UnitTests
 
         _input = new Input
         {
+            CredentialSource = CredentialSource.FilePath,
             BucketName = _details.BucketName,
             ProjectId = _details.ProjectId,
             Directory = _directory,
@@ -84,6 +85,7 @@ class UnitTests
         File.WriteAllText(Path.Combine(_directory, "test.txt"), "This is a test file.");
         _input.CredentialFilePath = string.Empty;
         _input.CredentialJson = _credentialsJson;
+        _input.CredentialSource = CredentialSource.Json;
         var result = await GoogleCloudStorage.UploadObject(_input, new Options(), default);
         Assert.AreEqual(1, result.UploadedObjects.Count);
     }
@@ -115,6 +117,7 @@ class UnitTests
     {
         var input = new Input
         {
+            CredentialSource = CredentialSource.FilePath,
             BucketName = $"InvalidBucket_{Guid.NewGuid()}",
             ProjectId = _details.ProjectId,
             Directory = _directory,
