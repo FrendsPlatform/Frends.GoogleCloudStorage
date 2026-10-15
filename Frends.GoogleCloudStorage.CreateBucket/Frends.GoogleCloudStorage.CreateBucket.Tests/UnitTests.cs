@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Frends.GoogleCloudStorage.CreateBucket.Definitions;
@@ -36,6 +37,7 @@ class UnitTests
             Location = _location,
             StorageClass = _storageClass,
             ProjectId = _projectId,
+            CredentialsType = CredentialType.FilePath,
             CredentialFilePath = _path,
             CredentialJson = "",
             AddGuidToBucketName = false
@@ -64,6 +66,7 @@ class UnitTests
     public async Task CreateBucket_CredentialsFromJsonString()
     {
         _input.CredentialFilePath = string.Empty;
+        _input.CredentialsType = CredentialType.Json;
         _input.CredentialJson = _credentialsJson;
         var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
         Assert.AreEqual(_bucketName, result.BucketName);
@@ -85,7 +88,38 @@ class UnitTests
         var result = await GoogleCloudStorage.CreateBucket(_input, _options, default);
         Assert.IsTrue(result.Success);
     }
+
 }
 
+[TestFixture]
+class InputValidationTests
+{
+    [Test]
+    public void CreateBucket_RequiresProjectId()
+    {
+        var input = new Input
+        {
+            ProjectId = string.Empty,
+            Location = "US-CENTRAL1",
+            CredentialsType = CredentialType.FilePath,
+            CredentialFilePath = "credentials.json"
+        };
 
+        Assert.ThrowsAsync<ValidationException>(async () =>
+            await GoogleCloudStorage.CreateBucket(input, new Options(), default));
+    }
 
+    [Test]
+    public void CreateBucket_RequiresSelectedCredential()
+    {
+        var input = new Input
+        {
+            ProjectId = "project-id",
+            Location = "US-CENTRAL1",
+            CredentialsType = CredentialType.FilePath
+        };
+
+        Assert.ThrowsAsync<ValidationException>(async () =>
+            await GoogleCloudStorage.CreateBucket(input, new Options(), default));
+    }
+}
