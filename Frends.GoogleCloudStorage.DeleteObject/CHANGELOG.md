@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0] - 2026-10-15
+### Changed
+- Breaking: The Task now requires an Options parameter and returns a single Result object with Success, Objects and Error properties. The list of deleted objects is available in Result.Objects.
+- Upgraded the Task to target .NET 8.
+
+### Added
+- Options ThrowErrorOnFailure and ErrorMessageOnFailure for controlling how errors are reported.
+
 ## [1.2.0] - 2025-10-17
 ### Fixed
 - Fix thrown exception when deleting an object from a non-existing bucket

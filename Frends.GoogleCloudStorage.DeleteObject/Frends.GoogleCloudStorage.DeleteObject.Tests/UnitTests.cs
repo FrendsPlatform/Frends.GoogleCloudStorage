@@ -74,8 +74,8 @@ class UnitTests
     [Test]
     public async Task DeleteObject()
     {
-        var result = await GoogleCloudStorage.DeleteObject(_input, default);
-        Assert.AreEqual(1, result.Count);
+        var result = await GoogleCloudStorage.DeleteObject(_input, new Options(), default);
+        Assert.AreEqual(1, result.Objects.Count);
     }
 
     [Test]
@@ -84,36 +84,36 @@ class UnitTests
         _input.Pattern = "pro_tet.txt";
         _input.CredentialFilePath = string.Empty;
         _input.CredentialJson = _credentialsJson;
-        var result = await GoogleCloudStorage.DeleteObject(_input, default);
-        Assert.AreEqual(1, result.Count);
+        var result = await GoogleCloudStorage.DeleteObject(_input, new Options(), default);
+        Assert.AreEqual(1, result.Objects.Count);
     }
 
     [Test]
     public async Task DeleteObject_FileMask()
     {
         _input.Pattern = "<regex>^(?!prof).*_test.txt";
-        var result = await GoogleCloudStorage.DeleteObject(_input, default);
-        Assert.AreEqual(3, result.Count);
+        var result = await GoogleCloudStorage.DeleteObject(_input, new Options(), default);
+        Assert.AreEqual(3, result.Objects.Count);
 
         await UploadTestFilesAsync(_credentialsJson, _directory, _details, _directory);
         _input.Pattern = @"test\d{4,4}.txt";
-        result = await GoogleCloudStorage.DeleteObject(_input, default);
-        Assert.AreEqual(2, result.Count);
+        result = await GoogleCloudStorage.DeleteObject(_input, new Options(), default);
+        Assert.AreEqual(2, result.Objects.Count);
 
         await UploadTestFilesAsync(_credentialsJson, _directory, _details, _directory);
         _input.Pattern = "pref.[^t][^x][^t]";
-        result = await GoogleCloudStorage.DeleteObject(_input, default);
-        Assert.AreEqual(2, result.Count);
+        result = await GoogleCloudStorage.DeleteObject(_input, new Options(), default);
+        Assert.AreEqual(2, result.Objects.Count);
 
         await UploadTestFilesAsync(_credentialsJson, _directory, _details, _directory);
         _input.Pattern = "test.(txt|xml)";
-        result = await GoogleCloudStorage.DeleteObject(_input, default);
-        Assert.AreEqual(2, result.Count);
+        result = await GoogleCloudStorage.DeleteObject(_input, new Options(), default);
+        Assert.AreEqual(2, result.Objects.Count);
 
         await UploadTestFilesAsync(_credentialsJson, _directory, _details, _directory);
         _input.Pattern = "*test.txt";
-        result = await GoogleCloudStorage.DeleteObject(_input, default);
-        Assert.AreEqual(5, result.Count);
+        result = await GoogleCloudStorage.DeleteObject(_input, new Options(), default);
+        Assert.AreEqual(5, result.Objects.Count);
     }
 
     [Test]
@@ -129,7 +129,7 @@ class UnitTests
             CredentialJson = ""
         };
         var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
-            await GoogleCloudStorage.DeleteObject(input, CancellationToken.None));
+            await GoogleCloudStorage.DeleteObject(input, new Options(), CancellationToken.None));
         Assert.That(ex.Message.Contains("Invalid bucket name"), $"Actual message: {ex.Message}");
     }
 

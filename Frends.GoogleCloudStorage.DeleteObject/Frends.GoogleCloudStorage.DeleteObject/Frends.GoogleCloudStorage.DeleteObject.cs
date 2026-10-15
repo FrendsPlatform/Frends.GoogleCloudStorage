@@ -1,52 +1,64 @@
-﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Frends.GoogleCloudStorage.DeleteObject.Definitions;
+using Frends.GoogleCloudStorage.DeleteObject.Helpers;
 
 namespace Frends.GoogleCloudStorage.DeleteObject;
 
 /// <summary>
 /// Main class for the Task.
 /// </summary>
-public class GoogleCloudStorage
+public static class GoogleCloudStorage
 {
     /// <summary>
     /// Deletes file/s from Google Cloud Storage.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.GoogleCloudStorage.DeleteObject)
     /// </summary>
     /// <param name="input">Input parameters</param>
+    /// <param name="options">Additional parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
-    /// <returns>List [ Result  object { string Name, string StorageClass, DateTime TimeCreated, string Bucket, ulong Size } ] </returns>
-    public static async Task<List<Result>> DeleteObject([PropertyTab] Input input, CancellationToken cancellationToken)
+    /// <returns>Object { bool Success, List&lt;DeletedObject&gt; Objects, Error Error { string Message, dynamic AdditionalInfo } }</returns>
+    public static async Task<Result> DeleteObject(
+        [PropertyTab] Input input,
+        [PropertyTab] Options options,
+        CancellationToken cancellationToken)
     {
-        GoogleCredential googleCredential = null;
+        try
+        {
+            GoogleCredential googleCredential = null;
 
-        if (!string.IsNullOrEmpty(input.CredentialJson))
-            googleCredential = GoogleCredential.FromJson(input.CredentialJson);
-        else if (!string.IsNullOrEmpty(input.CredentialFilePath))
-            googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
-        else throw new ArgumentException("Credentials are missing.");
+            if (!string.IsNullOrEmpty(input.CredentialJson))
+                googleCredential = GoogleCredential.FromJson(input.CredentialJson);
+            else if (!string.IsNullOrEmpty(input.CredentialFilePath))
+                googleCredential = GoogleCredential.FromFile(input.CredentialFilePath);
+            else throw new ArgumentException("Credentials are missing.");
 
-        if (string.IsNullOrEmpty(input.BucketName))
-            throw new ArgumentException("Bucket name is missing.");
+            if (string.IsNullOrEmpty(input.BucketName))
+                throw new ArgumentException("Bucket name is missing.");
 
-        using var storage = await StorageClient.CreateAsync(googleCredential);
+            using var storage = await StorageClient.CreateAsync(googleCredential);
 
-        var files = await FindMatchingFiles(storage, input.BucketName, input.Pattern, cancellationToken);
-        var results = new List<Result>();
-        foreach (var file in files)
-            results.Add(await ExecuteDeleteSingleObjectAsync(storage, file, input.BucketName, cancellationToken));
+            var files = await FindMatchingFiles(storage, input.BucketName, input.Pattern, cancellationToken);
+            var results = new List<DeletedObject>();
+            foreach (var file in files)
+                results.Add(await ExecuteDeleteSingleObjectAsync(storage, file, input.BucketName, cancellationToken));
 
-        return results;
+            return new Result(true, results);
+        }
+        catch (Exception ex)
+        {
+            return ex.Handle(options);
+        }
     }
 
-    private static async Task<Result> ExecuteDeleteSingleObjectAsync(StorageClient storage, string file, string bucket,
+    private static async Task<DeletedObject> ExecuteDeleteSingleObjectAsync(StorageClient storage, string file, string bucket,
         CancellationToken cancellationToken)
     {
         var deletedObject = await storage.GetObjectAsync(bucket, file, null, cancellationToken);
         await storage.DeleteObjectAsync(bucket, file, null, cancellationToken);
-        return new Result(deletedObject);
+        return new DeletedObject(deletedObject);
     }
 
     private static async Task<List<string>> FindMatchingFiles(StorageClient client, string bucket, string pattern,
