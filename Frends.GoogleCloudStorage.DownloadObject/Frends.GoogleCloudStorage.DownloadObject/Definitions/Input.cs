@@ -22,18 +22,21 @@ public class Input
     /// <example>your-unique-bucket-name</example>
     [DefaultValue("your-unique-bucket-name")]
     [DisplayFormat(DataFormatString = "Text")]
+    [Required(ErrorMessage = "BucketName is required.")]
     public string BucketName { get; set; }
 
     /// <summary>
     /// Destination directory for the downloaded files.
     /// </summary>
     /// <example>c:\folder\</example>
+    [Required(ErrorMessage = "Directory is required.")]
     public string Directory { get; set; }
 
     /// <summary>
     /// File mask for the source files.
     /// </summary>
     /// <example>*.txt</example>
+    [Required(ErrorMessage = "Pattern is required.")]
     public string Pattern { get; set; }
 
     /// <summary>

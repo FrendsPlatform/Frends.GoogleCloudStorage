@@ -88,8 +88,8 @@ class UnitTests
     [Test]
     public async Task DownloadObject()
     {
-        var result = await GoogleCloudStorage.DownloadObject(_input, default);
-        Assert.AreEqual(1, result.Count);
+        var result = await GoogleCloudStorage.DownloadObject(_input, new Options(), default);
+        Assert.AreEqual(1, result.Objects.Count);
     }
 
     [Test]
@@ -97,32 +97,32 @@ class UnitTests
     {
         _input.CredentialFilePath = string.Empty;
         _input.CredentialJson = _credentialsJson;
-        var result = await GoogleCloudStorage.DownloadObject(_input, default);
-        Assert.AreEqual(1, result.Count);
+        var result = await GoogleCloudStorage.DownloadObject(_input, new Options(), default);
+        Assert.AreEqual(1, result.Objects.Count);
     }
 
     [Test]
     public async Task DownloadObject_FileMask()
     {
         _input.Pattern = "<regex>^(?!prof).*_test.txt";
-        var result = await GoogleCloudStorage.DownloadObject(_input, default);
-        Assert.AreEqual(3, result.Count);
+        var result = await GoogleCloudStorage.DownloadObject(_input, new Options(), default);
+        Assert.AreEqual(3, result.Objects.Count);
 
         _input.Pattern = @"test\d{4,4}.txt";
-        result = await GoogleCloudStorage.DownloadObject(_input, default);
-        Assert.AreEqual(2, result.Count);
+        result = await GoogleCloudStorage.DownloadObject(_input, new Options(), default);
+        Assert.AreEqual(2, result.Objects.Count);
 
         _input.Pattern = "test.[^t][^x][^t]";
-        result = await GoogleCloudStorage.DownloadObject(_input, default);
-        Assert.AreEqual(2, result.Count);
+        result = await GoogleCloudStorage.DownloadObject(_input, new Options(), default);
+        Assert.AreEqual(2, result.Objects.Count);
 
         _input.Pattern = "test.(txt|xml)";
-        result = await GoogleCloudStorage.DownloadObject(_input, default);
-        Assert.AreEqual(2, result.Count);
+        result = await GoogleCloudStorage.DownloadObject(_input, new Options(), default);
+        Assert.AreEqual(2, result.Objects.Count);
 
         _input.Pattern = "*test.txt";
-        result = await GoogleCloudStorage.DownloadObject(_input, default);
-        Assert.AreEqual(5, result.Count);
+        result = await GoogleCloudStorage.DownloadObject(_input, new Options(), default);
+        Assert.AreEqual(5, result.Objects.Count);
     }
 
     private static async Task UploadTestFilesAsync(string credentialsJson, dynamic details, string[] files, string path)

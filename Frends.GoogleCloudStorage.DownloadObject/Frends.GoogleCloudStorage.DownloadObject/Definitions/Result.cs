@@ -1,5 +1,3 @@
-﻿using Data = Google.Apis.Storage.v1.Data;
-
 namespace Frends.GoogleCloudStorage.DownloadObject.Definitions;
 
 /// <summary>
@@ -8,42 +6,27 @@ namespace Frends.GoogleCloudStorage.DownloadObject.Definitions;
 public class Result
 {
     /// <summary>
-    /// Name of the uploaded object.
+    /// Indicates whether the operation completed successfully.
     /// </summary>
-    /// <example>file.txt</example>
-    public string Name { get; private set; }
+    /// <example>true</example>
+    public bool Success { get; private set; }
 
     /// <summary>
-    /// Storage class for the uploaded object.
+    /// Downloaded objects. Null when Success is false.
     /// </summary>
-    /// <example>STANDARD</example>
-    public string StorageClass { get; private set; }
+    /// <example>[ { Name = "file.txt", StorageClass = "STANDARD", Bucket = "your-unique-bucket-123456789", Size = 1024 } ]</example>
+    public List<DownloadedObject> Objects { get; private set; }
 
     /// <summary>
-    /// DateTime of the object creation time.
+    /// Error details. Null when Success is true.
     /// </summary>
-    /// <example></example>
-    public DateTime? TimeCreated { get; private set; }
+    /// <example>null</example>
+    public Error Error { get; private set; }
 
-    /// <summary>
-    /// Name of the bucket where the object was uploaded.
-    /// </summary>
-    /// <example>your-unique-bucket-123456789</example>
-    public string Bucket { get; private set; }
-
-    /// <summary>
-    /// Size of the content inside the uploaded object.
-    /// </summary>
-    /// <example></example>
-    public ulong? Size { get; private set; }
-
-    internal Result(Data.Object obj)
+    internal Result(bool success, List<DownloadedObject> objects = null, Error error = null)
     {
-        Name = obj.Name;
-        StorageClass = obj.StorageClass;
-        Size = obj.Size;
-        Bucket = obj.Bucket;
-        TimeCreated = obj.TimeCreated;
+        Success = success;
+        Objects = objects;
+        Error = error;
     }
 }
-
