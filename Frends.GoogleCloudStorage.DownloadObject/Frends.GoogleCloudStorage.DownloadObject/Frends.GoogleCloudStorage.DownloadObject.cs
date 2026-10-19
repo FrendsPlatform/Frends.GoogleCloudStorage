@@ -1,10 +1,10 @@
-﻿using Google.Apis.Auth.OAuth2;
-using Google.Cloud.Storage.V1;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Frends.GoogleCloudStorage.DownloadObject.Definitions;
 using Frends.GoogleCloudStorage.DownloadObject.Enums;
 using Frends.GoogleCloudStorage.DownloadObject.Helpers;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
 
 namespace Frends.GoogleCloudStorage.DownloadObject;
 
@@ -31,7 +31,7 @@ public static class GoogleCloudStorage
             {
                 CredentialType.Json => GoogleCredential.FromJson(input.CredentialJson),
                 CredentialType.FilePath => GoogleCredential.FromFile(input.CredentialFilePath),
-                _ => throw new ArgumentOutOfRangeException(nameof(input.CredentialsType), input.CredentialsType, "Unsupported credentials type.")
+                _ => throw new ArgumentOutOfRangeException(nameof(input.CredentialsType), input.CredentialsType, "Unsupported credentials type."),
             };
 
             using var storage = await StorageClient.CreateAsync(googleCredential);
@@ -65,6 +65,7 @@ public static class GoogleCloudStorage
             if (FileMatchesMask(file.Name, pattern))
                 files.Add(file.Name);
         }
+
         return files;
     }
 
@@ -73,10 +74,12 @@ public static class GoogleCloudStorage
         const string regexEscape = "<regex>";
         string pattern;
 
-        //check is pure regex wished to be used for matching
+        // Check if a pure regex is wished to be used for matching.
         if (mask.StartsWith(regexEscape))
-            //use substring instead of string.replace just in case some has regex like '<regex>//File<regex>' or something else like that
+        {
+            // Use Substring to avoid removing a regexEscape token embedded in the regex.
             pattern = mask.Substring(regexEscape.Length);
+        }
         else
         {
             pattern = mask.Replace(".", "\\.");

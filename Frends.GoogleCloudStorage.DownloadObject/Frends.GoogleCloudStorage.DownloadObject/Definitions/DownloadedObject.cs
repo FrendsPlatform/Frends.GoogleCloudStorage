@@ -7,6 +7,15 @@ namespace Frends.GoogleCloudStorage.DownloadObject.Definitions;
 /// </summary>
 public class DownloadedObject
 {
+    internal DownloadedObject(Data.Object obj)
+    {
+        Name = obj.Name;
+        StorageClass = obj.StorageClass;
+        Size = obj.Size;
+        Bucket = obj.Bucket;
+        TimeCreated = obj.TimeCreated;
+    }
+
     /// <summary>
     /// Name of the downloaded object.
     /// </summary>
@@ -36,13 +45,4 @@ public class DownloadedObject
     /// </summary>
     /// <example>1024</example>
     public ulong? Size { get; private set; }
-
-    internal DownloadedObject(Data.Object obj)
-    {
-        Name = obj.Name;
-        StorageClass = obj.StorageClass;
-        Size = obj.Size;
-        Bucket = obj.Bucket;
-        TimeCreated = obj.TimeCreated;
-    }
 }
