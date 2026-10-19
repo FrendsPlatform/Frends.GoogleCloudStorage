@@ -21,6 +21,5 @@ public class Options
     /// <example>Download failed: bucket not accessible</example>
     [DisplayFormat(DataFormatString = "Text")]
     [DefaultValue("")]
-    [StringLength(1024, ErrorMessage = "ErrorMessageOnFailure cannot exceed 1024 characters.")]
     public string ErrorMessageOnFailure { get; set; } = string.Empty;
 }

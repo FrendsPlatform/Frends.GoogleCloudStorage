@@ -5,15 +5,14 @@
 ### Added
 
 - Added error handling with cancellation support.
-- Added `Options` parameter to allow for more flexible configuration.
-- [Breaking Change] Added Input parameter to define credentials source.
+- Added `ThrowErrorOnFailure` and `ErrorMessageOnFailure` options for controlling error handling. Both parameters are in new `Options` tab.
+- [Breaking Change] Added Input `CredentialsType` parameter to define credentials source.
 
 ### Changed
 
-- The Task now returns a single result object with `Success`, `Objects` (the list of downloaded objects) and `Error`, instead of a plain list.
+- **[Breaking Change]** The Task now returns a single result object with `Success`, `Objects` (the list of downloaded objects) and `Error`, instead of a plain list.
 - Update target framework to .NET 8.
 - [Breaking Change] Exceptions raised regarding validation parameters are changed.
-- Added `ThrowErrorOnFailure` and `ErrorMessageOnFailure` options for controlling error handling.
 
 ## [1.1.0] - 2025-06-18
 ### Removed

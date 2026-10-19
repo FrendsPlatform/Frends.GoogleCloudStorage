@@ -14,7 +14,7 @@ public class Result
     /// <summary>
     /// Downloaded objects. Null when Success is false.
     /// </summary>
-    /// <example>[ { Name = "file.txt", StorageClass = "STANDARD", Bucket = "your-unique-bucket-123456789", Size = 1024 } ]</example>
+    /// <example>[ { Name = "file.txt", StorageClass = "STANDARD", TimeCreated = "2023-06-12T08:30:00Z", Bucket = "your-unique-bucket-123456789", Size = 1024 } ]</example>
     public List<DownloadedObject> Objects { get; private set; }
 
     /// <summary>
