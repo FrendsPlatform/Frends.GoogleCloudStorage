@@ -50,8 +50,6 @@ public static class GoogleCloudStorage
     /// <returns>Result containing metadata for uploaded objects.</returns>
     public static async Task<Result> UploadObject([PropertyTab] Input input, [PropertyTab] Options options, CancellationToken cancellationToken)
     {
-        options ??= new Options();
-
         try
         {
             ValidationHandler.Run(input, options);
