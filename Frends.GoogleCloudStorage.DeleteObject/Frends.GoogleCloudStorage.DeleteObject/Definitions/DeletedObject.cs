@@ -7,6 +7,15 @@ namespace Frends.GoogleCloudStorage.DeleteObject.Definitions;
 /// </summary>
 public class DeletedObject
 {
+    internal DeletedObject(Data.Object obj)
+    {
+        Name = obj.Name;
+        StorageClass = obj.StorageClass;
+        Size = obj.Size;
+        Bucket = obj.Bucket;
+        TimeCreated = obj.TimeCreated;
+    }
+
     /// <summary>
     /// Name of the deleted object.
     /// </summary>
@@ -36,14 +45,4 @@ public class DeletedObject
     /// </summary>
     /// <example>1024</example>
     public ulong? Size { get; private set; }
-
-    internal DeletedObject(Data.Object obj)
-    {
-        Name = obj.Name;
-        StorageClass = obj.StorageClass;
-        Size = obj.Size;
-        Bucket = obj.Bucket;
-        TimeCreated = obj.TimeCreated;
-    }
 }
-

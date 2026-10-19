@@ -5,6 +5,13 @@ namespace Frends.GoogleCloudStorage.DeleteObject.Definitions;
 /// </summary>
 public class Result
 {
+    internal Result(bool success, List<DeletedObject> objects = null, Error error = null)
+    {
+        Success = success;
+        Objects = objects ?? new List<DeletedObject>();
+        Error = error;
+    }
+
     /// <summary>
     /// Indicates whether the operation completed successfully.
     /// </summary>
@@ -14,7 +21,7 @@ public class Result
     /// <summary>
     /// List of the deleted objects. Empty when Success is false.
     /// </summary>
-    /// <example>[ { "Name": "file.txt", "StorageClass": "STANDARD", "Bucket": "your-unique-bucket-name", "Size": 1024 } ]</example>
+    /// <example>[ { "Name": "file.txt", "StorageClass": "STANDARD", "TimeCreated": "2023-07-24T10:15:30Z", "Bucket": "your-unique-bucket-name", "Size": 1024 } ]</example>
     public List<DeletedObject> Objects { get; private set; }
 
     /// <summary>
@@ -22,11 +29,4 @@ public class Result
     /// </summary>
     /// <example>null</example>
     public Error Error { get; private set; }
-
-    internal Result(bool success, List<DeletedObject> objects = null, Error error = null)
-    {
-        Success = success;
-        Objects = objects ?? new List<DeletedObject>();
-        Error = error;
-    }
 }

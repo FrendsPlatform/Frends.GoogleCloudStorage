@@ -1,10 +1,11 @@
-using Google.Apis.Auth.OAuth2;
-using Google.Cloud.Storage.V1;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+
 using Frends.GoogleCloudStorage.DeleteObject.Definitions;
 using Frends.GoogleCloudStorage.DeleteObject.Enums;
 using Frends.GoogleCloudStorage.DeleteObject.Helpers;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
 
 namespace Frends.GoogleCloudStorage.DeleteObject;
 
@@ -52,7 +53,10 @@ public static class GoogleCloudStorage
         }
     }
 
-    private static async Task<DeletedObject> ExecuteDeleteSingleObjectAsync(StorageClient storage, string file, string bucket,
+    private static async Task<DeletedObject> ExecuteDeleteSingleObjectAsync(
+        StorageClient storage,
+        string file,
+        string bucket,
         CancellationToken cancellationToken)
     {
         var deletedObject = await storage.GetObjectAsync(bucket, file, null, cancellationToken);
@@ -60,7 +64,10 @@ public static class GoogleCloudStorage
         return new DeletedObject(deletedObject);
     }
 
-    private static async Task<List<string>> FindMatchingFiles(StorageClient client, string bucket, string pattern,
+    private static async Task<List<string>> FindMatchingFiles(
+        StorageClient client,
+        string bucket,
+        string pattern,
         CancellationToken cancellationToken)
     {
         var files = new List<string>();
@@ -79,10 +86,12 @@ public static class GoogleCloudStorage
         const string regexEscape = "<regex>";
         string pattern;
 
-        //check is pure regex wished to be used for matching
+        // Allow a raw regular expression when the mask starts with the marker.
         if (mask.StartsWith(regexEscape))
-            //use substring instead of string.replace just in case some has regex like '<regex>//File<regex>' or something else like that
+        {
+            // Use substring instead of string.Replace in case the regex contains the marker again.
             pattern = mask.Substring(regexEscape.Length);
+        }
         else
         {
             pattern = mask.Replace(".", "\\.");
