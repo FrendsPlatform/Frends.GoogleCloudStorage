@@ -35,13 +35,6 @@ public class Input
     public bool DeleteObjects { get; set; }
 
     /// <summary>
-    /// Determines should Task throw exception if no bucket is found with the given name.
-    /// </summary>
-    /// <example>true</example>
-    [DefaultValue(true)]
-    public bool ThrowIfNoBucketFound { get; set; }
-
-    /// <summary>
     /// How the Google credentials are provided.
     /// </summary>
     /// <example>Json</example>
@@ -55,16 +48,16 @@ public class Input
     /// <code>
     /// {
     ///     "type": "service_account",
-    ///	    "project_id": "instant-test-stone-387712",
-    ///	    "private_key_id": "17d0g1b5a6e255c0ed67ef7213j8466c336edc55",
-    ///	    "private_key": "-----BEGIN PRIVATE KEY-----\jnejbUHBVudhcebuheuwhv....\n-----END PRIVATE KEY-----\n",
-    ///	    "client_email": "cloudstorage-testuser@instant-stone-387712.iam.gserviceaccount.com",
-    ///	    "client_id": "vjkornijvnerijvneri",
-    ///	    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    ///	    "token_uri": "https://oauth2.googleapis.com/token",
-    ///	    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    ///	    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloudstorage-testuser%40instant-stone-387712.iam.gserviceaccount.com",
-    ///	    "universe_domain": "googleapis.com"
+    ///     "project_id": "instant-test-stone-387712",
+    ///     "private_key_id": "17d0g1b5a6e255c0ed67ef7213j8466c336edc55",
+    ///     "private_key": "-----BEGIN PRIVATE KEY-----\jnejbUHBVudhcebuheuwhv....\n-----END PRIVATE KEY-----\n",
+    ///     "client_email": "cloudstorage-testuser@instant-stone-387712.iam.gserviceaccount.com",
+    ///     "client_id": "vjkornijvnerijvneri",
+    ///     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    ///     "token_uri": "https://oauth2.googleapis.com/token",
+    ///     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    ///     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloudstorage-testuser%40instant-stone-387712.iam.gserviceaccount.com",
+    ///     "universe_domain": "googleapis.com"
     /// }
     /// </code>
     /// </example>
@@ -82,4 +75,3 @@ public class Input
     [DisplayFormat(DataFormatString = "Text")]
     public string CredentialFilePath { get; set; }
 }
-

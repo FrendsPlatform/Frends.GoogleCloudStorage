@@ -5,8 +5,8 @@
 ### Added
 
 - Added error handling with cancellation support.
-- Added `Options` parameter to allow for more flexible configuration.
-- Added parameter to define credential source.
+- [Breaking Change] Added `Options` parameter to allow for more flexible configuration.
+- [Breaking Change] Added parameter to define credential source.
 
 ### Changed
 

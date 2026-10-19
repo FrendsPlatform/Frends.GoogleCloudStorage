@@ -1,8 +1,8 @@
-﻿using Google.Apis.Auth.OAuth2;
-using Google.Cloud.Storage.V1;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Frends.GoogleCloudStorage.DeleteBucket.Definitions;
 using Frends.GoogleCloudStorage.DeleteBucket.Helpers;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
 
 namespace Frends.GoogleCloudStorage.DeleteBucket;
 
@@ -11,20 +11,16 @@ namespace Frends.GoogleCloudStorage.DeleteBucket;
 /// </summary>
 public static class GoogleCloudStorage
 {
-
-
     /// <summary>
     /// Deletes a bucket from Google Cloud Storage.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.GoogleCloudStorage.DeleteBucket)
     /// </summary>
     /// <param name="input">Bucket input parameters</param>
-    /// <param name="cancellationToken">CancellationToken is given by Frends</param>
     /// <param name="options">Additional parameters.</param>
-    /// <returns>Result object { bool Success } </returns>
+    /// <param name="cancellationToken">CancellationToken is given by Frends</param>
+    /// <returns>object { bool Success, object { string Message, Exception AdditionalInfo } Error }</returns>
     public static async Task<Result> DeleteBucket([PropertyTab] Input input, [PropertyTab] Options options, CancellationToken cancellationToken)
     {
-        options ??= new Options();
-
         try
         {
             ValidationHandler.Run(input, options);
@@ -41,14 +37,14 @@ public static class GoogleCloudStorage
                 var deleteBucketOptions = new DeleteBucketOptions
                 {
                     DeleteObjects = input.DeleteObjects,
-                    RetryOptions = RetryOptions.IdempotentRetryOptions
+                    RetryOptions = RetryOptions.IdempotentRetryOptions,
                 };
 
                 await storage.DeleteBucketAsync(bucket, deleteBucketOptions, cancellationToken);
                 return new Result(true);
             }
 
-            if (input.ThrowIfNoBucketFound)
+            if (options.ThrowIfNoBucketFound)
                 throw new ArgumentException("No bucket found.");
             return new Result(false);
         }

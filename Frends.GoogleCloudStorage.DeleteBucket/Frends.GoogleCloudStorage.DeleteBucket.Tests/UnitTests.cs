@@ -39,7 +39,6 @@ class UnitTests
             BucketName = _details.BucketName,
             ProjectId = _details.ProjectId,
             DeleteObjects = true,
-            ThrowIfNoBucketFound = true,
             CredentialsType = CredentialsType.FilePath,
             CredentialFilePath = _path,
             CredentialJson = ""
@@ -84,8 +83,7 @@ class UnitTests
     public async Task CreateBucket_NoBucketToDeleteShouldNotThrow()
     {
         _ = await GoogleCloudStorage.DeleteBucket(_input, new Options(), default);
-        _input.ThrowIfNoBucketFound = false;
-        var result = await GoogleCloudStorage.DeleteBucket(_input, new Options(), default);
+        var result = await GoogleCloudStorage.DeleteBucket(_input, new Options { ThrowIfNoBucketFound = false }, default);
         Assert.IsFalse(result.Success);
     }
 
@@ -113,5 +111,4 @@ class UnitTests
         }
     }
 }
-
 
