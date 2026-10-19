@@ -62,17 +62,4 @@ class ErrorHandlerTest
             await GoogleCloudStorage.DownloadObject(input, new Options(), CancellationToken.None));
         Assert.That(ex.Message, Contains.Substring("CredentialFilePath is required"));
     }
-
-    [Test]
-    public async Task Should_Validate_Options()
-    {
-        var options = new Options
-        {
-            ErrorMessageOnFailure = new string('x', 1025),
-            ThrowErrorOnFailure = false,
-        };
-        var result = await GoogleCloudStorage.DownloadObject(InvalidInput(), options, CancellationToken.None);
-        Assert.That(result.Success, Is.False);
-        Assert.That(result.Error.Message, Contains.Substring("ErrorMessageOnFailure cannot exceed 1024 characters"));
-    }
 }

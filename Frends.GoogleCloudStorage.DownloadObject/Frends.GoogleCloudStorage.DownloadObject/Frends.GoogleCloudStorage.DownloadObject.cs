@@ -25,7 +25,7 @@ public static class GoogleCloudStorage
     {
         try
         {
-            ValidationHandler.Run(input, options);
+            ValidationHandler.Run(input);
 
             var googleCredential = input.CredentialsType switch
             {
