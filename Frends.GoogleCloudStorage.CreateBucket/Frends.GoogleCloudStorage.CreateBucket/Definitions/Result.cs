@@ -1,4 +1,5 @@
 ﻿using Google.Apis.Storage.v1.Data;
+
 namespace Frends.GoogleCloudStorage.CreateBucket.Definitions;
 
 /// <summary>
@@ -6,11 +7,22 @@ namespace Frends.GoogleCloudStorage.CreateBucket.Definitions;
 /// </summary>
 public class Result
 {
+    internal Result(bool success, Bucket bucket = null, Error error = null)
+    {
+        Success = success;
+        BucketName = bucket?.Name;
+        Location = bucket?.Location;
+        StorageClass = bucket?.StorageClass;
+        TimeCreated = bucket?.TimeCreated;
+        Error = error;
+    }
+
     /// <summary>
     /// Result of the operation.
     /// </summary>
     /// <example>true</example>
     public bool Success { get; private set; }
+
     /// <summary>
     /// Bucket name of the newly created bucket.
     /// </summary>
@@ -40,15 +52,4 @@ public class Result
     /// </summary>
     /// <example>null</example>
     public Error Error { get; private set; }
-
-    internal Result(bool success, Bucket bucket = null, Error error = null)
-    {
-        Success = success;
-        BucketName = bucket?.Name;
-        Location = bucket?.Location;
-        StorageClass = bucket?.StorageClass;
-        TimeCreated = bucket?.TimeCreated;
-        Error = error;
-    }
 }
-
