@@ -1,10 +1,11 @@
-﻿using Google.Apis.Auth.OAuth2;
+using System.ComponentModel;
+
+using Frends.GoogleCloudStorage.UploadObject.Definitions;
+using Frends.GoogleCloudStorage.UploadObject.Helpers;
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
-using System.ComponentModel;
-using Frends.GoogleCloudStorage.UploadObject.Definitions;
-using Frends.GoogleCloudStorage.UploadObject.Helpers;
 
 namespace Frends.GoogleCloudStorage.UploadObject;
 
@@ -47,7 +48,7 @@ public static class GoogleCloudStorage
     /// <param name="input">Input parameters</param>
     /// <param name="options">Additional parameters</param>
     /// <param name="cancellationToken">CancellationToken is given by Frends</param>
-    /// <returns>Result containing metadata for uploaded objects.</returns>
+    /// <returns>object { bool Success, object { string Message, Exception AdditionalInfo } Error, List&lt;UploadedObject&gt; UploadedObjects }</returns>
     public static async Task<Result> UploadObject([PropertyTab] Input input, [PropertyTab] Options options, CancellationToken cancellationToken)
     {
         try
@@ -66,8 +67,10 @@ public static class GoogleCloudStorage
             var files = matchResults.Files.Select(match => Path.Combine(input.Directory, match.Path)).ToArray();
             var uploadedObjects = new List<UploadedObject>();
             foreach (var file in files)
+            {
                 uploadedObjects.Add(
                     await ExecuteUploadSingleObjectAsync(storage, file, input.BucketName, input, cancellationToken));
+            }
 
             return new Result(true) { UploadedObjects = uploadedObjects };
         }
@@ -77,12 +80,21 @@ public static class GoogleCloudStorage
         }
     }
 
-    private static async Task<UploadedObject> ExecuteUploadSingleObjectAsync(StorageClient storage, string file, string bucket,
-        Input input, CancellationToken cancellationToken)
+    private static async Task<UploadedObject> ExecuteUploadSingleObjectAsync(
+        StorageClient storage,
+        string file,
+        string bucket,
+        Input input,
+        CancellationToken cancellationToken)
     {
         var objectName = Path.GetFileName(file);
-        var result = await storage.UploadObjectAsync(bucket, objectName, input.ContentType,
-            new MemoryStream(File.ReadAllBytes(file)), null, cancellationToken);
+        var result = await storage.UploadObjectAsync(
+            bucket,
+            objectName,
+            input.ContentType,
+            new MemoryStream(File.ReadAllBytes(file)),
+            null,
+            cancellationToken);
         return new UploadedObject(result);
     }
 

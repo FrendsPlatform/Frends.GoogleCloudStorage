@@ -10,7 +10,7 @@
 ### Changed
 - Update target framework to .NET 8.
 - **[Breaking Change]** Exceptions raised regarding validation parameters are changed.
-- Upload Object now returns one task result containing metadata for every uploaded object.
+- **[Breaking Change]** Upload Object now returns a `Result` instead of `List<Result>`. The result exposes uploaded file metadata through `List<UploadedObject>`
 
 ## [1.2.0] - 2025-10-17
 ### Fixed

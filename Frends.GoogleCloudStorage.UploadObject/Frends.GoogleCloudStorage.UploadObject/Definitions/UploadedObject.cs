@@ -7,6 +7,15 @@ namespace Frends.GoogleCloudStorage.UploadObject.Definitions;
 /// </summary>
 public class UploadedObject
 {
+    internal UploadedObject(Data.Object obj)
+    {
+        Name = obj.Name;
+        StorageClass = obj.StorageClass;
+        Size = obj.Size;
+        Bucket = obj.Bucket;
+        TimeCreated = obj.TimeCreated;
+    }
+
     /// <summary>
     /// Name of the uploaded object.
     /// </summary>
@@ -36,13 +45,4 @@ public class UploadedObject
     /// </summary>
     /// <example>1024</example>
     public ulong? Size { get; private set; }
-
-    internal UploadedObject(Data.Object obj)
-    {
-        Name = obj.Name;
-        StorageClass = obj.StorageClass;
-        Size = obj.Size;
-        Bucket = obj.Bucket;
-        TimeCreated = obj.TimeCreated;
-    }
 }
