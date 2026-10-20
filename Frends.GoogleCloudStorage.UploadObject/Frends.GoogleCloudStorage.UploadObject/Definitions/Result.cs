@@ -1,5 +1,3 @@
-﻿using Data = Google.Apis.Storage.v1.Data;
-
 namespace Frends.GoogleCloudStorage.UploadObject.Definitions;
 
 /// <summary>
@@ -8,42 +6,31 @@ namespace Frends.GoogleCloudStorage.UploadObject.Definitions;
 public class Result
 {
     /// <summary>
-    /// Name of the uploaded object.
+    /// Initializes a new instance of the <see cref="Result"/> class.
     /// </summary>
-    /// <example>file.txt</example>
-    public string Name { get; private set; }
-
-    /// <summary>
-    /// Storage class for the uploaded object.
-    /// </summary>
-    /// <example>STANDARD</example>
-    public string StorageClass { get; private set; }
-
-    /// <summary>
-    /// DateTime of the object creation time.
-    /// </summary>
-    /// <example></example>
-    public DateTime? TimeCreated { get; private set; }
-
-    /// <summary>
-    /// Name of the bucket where the object was uploaded.
-    /// </summary>
-    /// <example>your-unique-bucket-123456789</example>
-    public string Bucket { get; private set; }
-
-    /// <summary>
-    /// Size of the content inside the uploaded object.
-    /// </summary>
-    /// <example></example>
-    public ulong? Size { get; private set; }
-
-    internal Result(Data.Object obj)
+    /// <param name="success">Whether the upload operation completed successfully.</param>
+    /// <param name="error">Error details when the operation failed.</param>
+    public Result(bool success, Error error = null)
     {
-        Name = obj.Name;
-        StorageClass = obj.StorageClass;
-        Size = obj.Size;
-        Bucket = obj.Bucket;
-        TimeCreated = obj.TimeCreated;
+        Success = success;
+        Error = error;
     }
-}
 
+    /// <summary>
+    /// Indicates whether the operation completed successfully.
+    /// </summary>
+    /// <example>true</example>
+    public bool Success { get; private set; }
+
+    /// <summary>
+    /// Error details. Null when the operation succeeds.
+    /// </summary>
+    /// <example>null</example>
+    public Error Error { get; private set; }
+
+    /// <summary>
+    /// Metadata for the uploaded objects.
+    /// </summary>
+    /// <example>List&lt;UploadedObject&gt; { object { string Name, string StorageClass, DateTime? TimeCreated, string Bucket, ulong? Size } }</example>
+    public List<UploadedObject> UploadedObjects { get; internal set; } = [];
+}
