@@ -1,5 +1,3 @@
-﻿using Data = Google.Apis.Storage.v1.Data;
-
 namespace Frends.GoogleCloudStorage.DeleteObject.Definitions;
 
 /// <summary>
@@ -7,43 +5,28 @@ namespace Frends.GoogleCloudStorage.DeleteObject.Definitions;
 /// </summary>
 public class Result
 {
-    /// <summary>
-    /// Name of the deleted object.
-    /// </summary>
-    /// <example>file.txt</example>
-    public string Name { get; private set; }
-
-    /// <summary>
-    /// Storage class for the deleted object.
-    /// </summary>
-    /// <example>STANDARD</example>
-    public string StorageClass { get; private set; }
-
-    /// <summary>
-    /// DateTime of the object creation time.
-    /// </summary>
-    /// <example></example>
-    public DateTime? TimeCreated { get; private set; }
-
-    /// <summary>
-    /// Name of the bucket where the object was uploaded.
-    /// </summary>
-    /// <example>your-unique-bucket-123456789</example>
-    public string Bucket { get; private set; }
-
-    /// <summary>
-    /// Size of the content inside the uploaded object.
-    /// </summary>
-    /// <example></example>
-    public ulong? Size { get; private set; }
-
-    internal Result(Data.Object obj)
+    internal Result(bool success, List<DeletedObject> objects = null, Error error = null)
     {
-        Name = obj.Name;
-        StorageClass = obj.StorageClass;
-        Size = obj.Size;
-        Bucket = obj.Bucket;
-        TimeCreated = obj.TimeCreated;
+        Success = success;
+        Objects = objects ?? new List<DeletedObject>();
+        Error = error;
     }
-}
 
+    /// <summary>
+    /// Indicates whether the operation completed successfully.
+    /// </summary>
+    /// <example>true</example>
+    public bool Success { get; private set; }
+
+    /// <summary>
+    /// List of the deleted objects. Empty when Success is false.
+    /// </summary>
+    /// <example>[ { "Name": "file.txt", "StorageClass": "STANDARD", "TimeCreated": "2023-07-24T10:15:30Z", "Bucket": "your-unique-bucket-name", "Size": 1024 } ]</example>
+    public List<DeletedObject> Objects { get; private set; }
+
+    /// <summary>
+    /// Error details. Null when Success is true.
+    /// </summary>
+    /// <example>null</example>
+    public Error Error { get; private set; }
+}
