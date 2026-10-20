@@ -39,7 +39,7 @@ class UnitTests
             BucketName = _details.BucketName,
             ProjectId = _details.ProjectId,
             DeleteObjects = true,
-            ThrowIfNoBucketFound = true,
+            CredentialsType = CredentialsType.FilePath,
             CredentialFilePath = _path,
             CredentialJson = ""
         };
@@ -56,42 +56,42 @@ class UnitTests
     [Test]
     public async Task DeleteBucket()
     {
-        var result = await GoogleCloudStorage.DeleteBucket(_input, default);
+        var result = await GoogleCloudStorage.DeleteBucket(_input, new Options(), default);
         Assert.IsTrue(result.Success);
     }
 
     [Test]
     public async Task CreateBucket_CredentialsFromJsonString()
     {
+        _input.CredentialsType = CredentialsType.Json;
         _input.CredentialFilePath = string.Empty;
         _input.CredentialJson = _credentialsJson;
-        var result = await GoogleCloudStorage.DeleteBucket(_input, default);
+        var result = await GoogleCloudStorage.DeleteBucket(_input, new Options(), default);
         Assert.IsTrue(result.Success);
     }
 
     [Test]
     public async Task CreateBucket_EmptyBucketNameShouldThrow()
     {
-        _ = await GoogleCloudStorage.DeleteBucket(_input, default);
+        _ = await GoogleCloudStorage.DeleteBucket(_input, new Options(), default);
         _input.BucketName = string.Empty;
-        var ex = Assert.ThrowsAsync<ArgumentException>(() => GoogleCloudStorage.DeleteBucket(_input, default));
-        Assert.AreEqual("Bucket name is missing.", ex.Message);
+        var ex = Assert.ThrowsAsync<System.ComponentModel.DataAnnotations.ValidationException>(() => GoogleCloudStorage.DeleteBucket(_input, new Options(), default));
+        Assert.That(ex.Message, Does.Contain("Bucket name is missing."));
     }
 
     [Test]
     public async Task CreateBucket_NoBucketToDeleteShouldNotThrow()
     {
-        _ = await GoogleCloudStorage.DeleteBucket(_input, default);
-        _input.ThrowIfNoBucketFound = false;
-        var result = await GoogleCloudStorage.DeleteBucket(_input, default);
+        _ = await GoogleCloudStorage.DeleteBucket(_input, new Options(), default);
+        var result = await GoogleCloudStorage.DeleteBucket(_input, new Options { ThrowIfNoBucketFound = false }, default);
         Assert.IsFalse(result.Success);
     }
 
     [Test]
     public async Task CreateBucket_NoBucketToDeleteShouldThrow()
     {
-        _ = await GoogleCloudStorage.DeleteBucket(_input, default);
-        var ex = Assert.ThrowsAsync<ArgumentException>(() => GoogleCloudStorage.DeleteBucket(_input, default));
+        _ = await GoogleCloudStorage.DeleteBucket(_input, new Options(), default);
+        var ex = Assert.ThrowsAsync<ArgumentException>(() => GoogleCloudStorage.DeleteBucket(_input, new Options(), default));
         Assert.AreEqual("No bucket found.", ex.Message);
     }
 
@@ -111,6 +111,4 @@ class UnitTests
         }
     }
 }
-
-
 
