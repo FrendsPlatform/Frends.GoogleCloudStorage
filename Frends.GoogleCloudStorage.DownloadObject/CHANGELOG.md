@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.0] - 2026-10-15
+
+### Added
+
+- Added error handling with cancellation support.
+- Added `ThrowErrorOnFailure` and `ErrorMessageOnFailure` options for controlling error handling. Both parameters are in new `Options` tab.
+- [Breaking Change] Added Input `CredentialsType` parameter to define credentials source.
+
+### Changed
+
+- **[Breaking Change]** The Task now returns a single result object with `Success`, `Objects` (the list of downloaded objects) and `Error`, instead of a plain list.
+- Update target framework to .NET 8.
+- [Breaking Change] Exceptions raised regarding validation parameters are changed.
+
 ## [1.1.0] - 2025-06-18
 ### Removed
 - Eliminated the `ListBuckets` call used only for error handling. The bucket name is now passed directly to `FindMatchingFiles`.

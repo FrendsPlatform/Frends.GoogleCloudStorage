@@ -1,5 +1,3 @@
-﻿using Data = Google.Apis.Storage.v1.Data;
-
 namespace Frends.GoogleCloudStorage.DownloadObject.Definitions;
 
 /// <summary>
@@ -7,43 +5,28 @@ namespace Frends.GoogleCloudStorage.DownloadObject.Definitions;
 /// </summary>
 public class Result
 {
-    /// <summary>
-    /// Name of the uploaded object.
-    /// </summary>
-    /// <example>file.txt</example>
-    public string Name { get; private set; }
-
-    /// <summary>
-    /// Storage class for the uploaded object.
-    /// </summary>
-    /// <example>STANDARD</example>
-    public string StorageClass { get; private set; }
-
-    /// <summary>
-    /// DateTime of the object creation time.
-    /// </summary>
-    /// <example></example>
-    public DateTime? TimeCreated { get; private set; }
-
-    /// <summary>
-    /// Name of the bucket where the object was uploaded.
-    /// </summary>
-    /// <example>your-unique-bucket-123456789</example>
-    public string Bucket { get; private set; }
-
-    /// <summary>
-    /// Size of the content inside the uploaded object.
-    /// </summary>
-    /// <example></example>
-    public ulong? Size { get; private set; }
-
-    internal Result(Data.Object obj)
+    internal Result(bool success, List<DownloadedObject> objects = null, Error error = null)
     {
-        Name = obj.Name;
-        StorageClass = obj.StorageClass;
-        Size = obj.Size;
-        Bucket = obj.Bucket;
-        TimeCreated = obj.TimeCreated;
+        Success = success;
+        Objects = objects;
+        Error = error;
     }
-}
 
+    /// <summary>
+    /// Indicates whether the operation completed successfully.
+    /// </summary>
+    /// <example>true</example>
+    public bool Success { get; private set; }
+
+    /// <summary>
+    /// Downloaded objects. Null when Success is false.
+    /// </summary>
+    /// <example>[ { Name = "file.txt", StorageClass = "STANDARD", TimeCreated = "2023-06-12T08:30:00Z", Bucket = "your-unique-bucket-123456789", Size = 1024 } ]</example>
+    public List<DownloadedObject> Objects { get; private set; }
+
+    /// <summary>
+    /// Error details. Null when Success is true.
+    /// </summary>
+    /// <example>null</example>
+    public Error Error { get; private set; }
+}
