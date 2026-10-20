@@ -1,5 +1,6 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Frends.GoogleCloudStorage.CreateBucket.Attributes;
 using Frends.GoogleCloudStorage.CreateBucket.Enums;
 
 namespace Frends.GoogleCloudStorage.CreateBucket.Definitions;
@@ -15,6 +16,7 @@ public class Input
     /// <example>your - project - id</example>
     [DefaultValue("your - project - id")]
     [DisplayFormat(DataFormatString = "Text")]
+    [Required]
     public string ProjectId { get; set; }
 
     /// <summary>
@@ -38,6 +40,7 @@ public class Input
     /// <example>us-west1</example>
     [DefaultValue("us-west1")]
     [DisplayFormat(DataFormatString = "Text")]
+    [Required]
     public string Location { get; set; }
 
     /// <summary>
@@ -45,7 +48,16 @@ public class Input
     /// </summary>
     /// <example>StorageClassType.STANDARD</example>
     [DefaultValue(StorageClassType.STANDARD)]
+    [EnumDataType(typeof(StorageClassType))]
     public StorageClassType StorageClass { get; set; }
+
+    /// <summary>
+    /// Selects how Google credentials are provided.
+    /// </summary>
+    /// <example>CredentialType.Json</example>
+    [DefaultValue(CredentialType.Json)]
+    [EnumDataType(typeof(CredentialType))]
+    public CredentialType CredentialsType { get; set; } = CredentialType.Json;
 
     /// <summary>
     /// Google Credentials in JSON format.
@@ -54,20 +66,22 @@ public class Input
     /// <code>
     /// {
     ///     "type": "service_account",
-    ///	    "project_id": "instant-test-stone-387712",
-    ///	    "private_key_id": "17d0g1b5a6e255c0ed67ef7213j8466c336edc55",
-    ///	    "private_key": "-----BEGIN PRIVATE KEY-----\jnejbUHBVudhcebuheuwhv....\n-----END PRIVATE KEY-----\n",
-    ///	    "client_email": "cloudstorage-testuser@instant-stone-387712.iam.gserviceaccount.com",
-    ///	    "client_id": "vjkornijvnerijvneri",
-    ///	    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    ///	    "token_uri": "https://oauth2.googleapis.com/token",
-    ///	    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    ///	    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloudstorage-testuser%40instant-stone-387712.iam.gserviceaccount.com",
-    ///	    "universe_domain": "googleapis.com"
+    ///     "project_id": "instant-test-stone-387712",
+    ///     "private_key_id": "17d0g1b5a6e255c0ed67ef7213j8466c336edc55",
+    ///     "private_key": "-----BEGIN PRIVATE KEY-----\jnejbUHBVudhcebuheuwhv....\n-----END PRIVATE KEY-----\n",
+    ///     "client_email": "cloudstorage-testuser@instant-stone-387712.iam.gserviceaccount.com",
+    ///     "client_id": "vjkornijvnerijvneri",
+    ///     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    ///     "token_uri": "https://oauth2.googleapis.com/token",
+    ///     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    ///     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloudstorage-testuser%40instant-stone-387712.iam.gserviceaccount.com",
+    ///     "universe_domain": "googleapis.com"
     /// }
     /// </code>
     /// </example>
     [DisplayFormat(DataFormatString = "Json")]
+    [UIHint(nameof(CredentialsType), "", CredentialType.Json)]
+    [RequiredIf(nameof(CredentialsType), CredentialType.Json)]
     public string CredentialJson { get; set; }
 
     /// <summary>
@@ -75,6 +89,7 @@ public class Input
     /// </summary>
     /// <example>C:\folder\google_credentials.json</example>
     [DisplayFormat(DataFormatString = "Text")]
+    [UIHint(nameof(CredentialsType), "", CredentialType.FilePath)]
+    [RequiredIf(nameof(CredentialsType), CredentialType.FilePath)]
     public string CredentialFilePath { get; set; }
 }
-
