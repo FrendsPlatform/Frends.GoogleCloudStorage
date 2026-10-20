@@ -50,7 +50,7 @@ public class Input
     public CredentialType CredentialsType { get; set; } = CredentialType.Json;
 
     /// <summary>
-    /// Content to be uploaded to the Google Cloud Storage.
+    /// Content to be downloaded from the Google Cloud Storage.
     /// </summary>
     /// <example>text/plain</example>
     public string ContentType { get; set; }
